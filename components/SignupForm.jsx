@@ -3,22 +3,34 @@
 import React, { useState } from 'react';
 import { TextField, Button, Paper, Typography, Container, CssBaseline } from '@mui/material';
 import { useRouter } from 'next/navigation';
+import zxcvbn from 'zxcvbn';
 
 
 const SignupForm = () => {
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const[repassword, setRepassword] =useState('');
   const[error, setError] = useState('');
+  const [passwordStrength, setPasswordStrength] = useState('');
 
   const router = useRouter();
   
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!firstName || !lastName || !email || !password) {
+    if ( !email || !password || !repassword) {
       setError("All fields are necessary.");
+      return;
+    }
+
+    if (password !== repassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+
+    setPasswordStrength(zxcvbn(password).score);
+    if(passwordStrength < 3) {
+      setError("Password is weak. Please choose a stronger password");
       return;
     }
 
@@ -44,10 +56,9 @@ const SignupForm = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-            firstName,
-            lastName,
           email,
           password,
+          repassword,
         }),
       });
 
@@ -66,29 +77,11 @@ const SignupForm = () => {
 
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" maxWidth="xs" >
       <CssBaseline />
-      <Paper elevation={3} style={{ padding: 20, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <Paper elevation={3} style={{ padding: 20, display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop:'40px' }}>
         <Typography variant="h5">Sign Up</Typography>
         <form onSubmit={handleSubmit} style={{ width: '100%', marginTop: 20 }}>
-          <TextField
-            label="First Name"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
-            required
-          />
-          <TextField
-            label="Last Name"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
-            required
-          />
           <TextField
             label="Email"
             variant="outlined"
@@ -109,10 +102,18 @@ const SignupForm = () => {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
+            <TextField
+            label="Repassword"
+            variant="outlined"
+            fullWidth
+            margin="normal"
+            type="password"
+            value={repassword}
+            onChange={(e) => setRepassword(e.target.value)}
+            required
+          />
           {
-            error && (<div>
-                {error}
-            </div>)
+           <div style={{ color: 'red' }}>{error}</div>
           }
           <Button type="submit" variant="contained" color="primary" fullWidth style={{ marginTop: 20 }}>
             Sign Up

@@ -1,7 +1,7 @@
 import SignupForm from "/Users/sanjayjain/Desktop/frequency-management-system/capstone/components/SignupForm.jsx";
 import {getServerSession} from 'next-auth';
 import {redirect} from 'next/navigation';
-import {authOptions} from '/Users/sanjayjain/Desktop/frequency-management-system/capstone/pages/api/auth/[...nextauth]/route';
+import {authOptions} from '/Users/sanjayjain/Desktop/frequency-management-system/capstone/app/api/auth/[...nextauth]/route';
 
 
 

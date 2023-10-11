@@ -82,7 +82,12 @@ export default function HomePage() {
                                 Login
                             </Button>
 
-                            <Button variant="outlined">Signup</Button>
+                            <Button
+                                variant="outlined"
+                                onClick={() => router.push("signup")} // Navigate to LoginForm
+                            >
+                                Signup
+                            </Button>
                         </Stack>
                     </Container>
                 </Box>

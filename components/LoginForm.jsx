@@ -3,17 +3,21 @@
 import React, { useState } from 'react';
 import { TextField, Button, Paper, Typography, Container, CssBaseline } from '@mui/material';
 import Link from 'next/link';
-import {signIn} from 'next-auth/react'
+import { signIn } from 'next-auth/react'
 import { useRouter } from "next/navigation";
-
+import Image from 'next/image'
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const[error, setError] = useState('');
+  const [error, setError] = useState('');
   const router = useRouter();
 
-  const handleSubmit = async(e) => {
+  async function handleGoogleSignin() {
+    signIn('google', { callbackUrl: "http://localhost:3000" })
+  }
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const res = await signIn("credentials", {
@@ -36,39 +40,50 @@ const LoginForm = () => {
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
-      <Paper elevation={3} style={{ padding: 20, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <Typography variant="h5">Login</Typography>
-        <form onSubmit={handleSubmit} style={{ width: '100%', marginTop: 20 }}>
-          <TextField
-            label="Email"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <TextField
-            label="Password"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-          <Button type="submit" variant="contained" color="primary" fullWidth style={{ marginTop: 20 }}>
-            Sign In
-          </Button>
-          {
-            error && (<div>{error}</div>)
-          }
-          <Link href="/signup" style={{ marginTop: 20 }}>
-              Don&apos;t have an account? Sign up here.
-            </Link>
-        </form>
-      </Paper>
+      <section className='w-8/4 mx-auto flex flex-col gap-10 mt-10'>
+        <Paper elevation={3} style={{ padding: 20, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <Typography variant="h5">Login</Typography>
+          <p className="text-gray-400">Please enter your credentials to continue</p>
+          <form onSubmit={handleSubmit} style={{ width: '100%', marginTop: 20 }}>
+            <TextField
+              label="Email"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+            <TextField
+              label="Password"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <Button type="submit" variant="contained" color="primary" fullWidth style={{ marginTop: 20 }}>
+              Sign In
+            </Button>
+            <div className="input-button" style={{ marginTop: '20px' }}>
+              <Button type='button' onClick={handleGoogleSignin}>
+                <Image src={'/google.svg'} width="20" height={20} alt='Google Icon' style={{ marginRight: '8px' }} />
+                <span>Sign In with Google</span>
+              </Button>
+            </div>
+            {
+              error && (<div>{error}</div>)
+            }
+            <div style={{ marginTop: '20px' }}>
+              <Link href="/signup" style={{ marginTop: '4px', textDecoration: 'none', color: 'inherit' }}>
+                Don't have an account? <span style={{ borderBottom: '1px solid black', cursor: 'pointer',color: 'inherit' }}>Signup here</span>.
+              </Link>
+            </div>
+          </form>
+        </Paper>
+      </section>
     </Container>
   );
 };
