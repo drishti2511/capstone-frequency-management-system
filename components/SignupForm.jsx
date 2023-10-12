@@ -65,7 +65,7 @@ const SignupForm = () => {
       if (res.ok) {
         const form = e.target;
         form.reset();
-        router.push("/");
+        router.push("login");
       } else {
         console.log("User registration failed.");
       }
@@ -113,7 +113,7 @@ const SignupForm = () => {
             required
           />
           {
-           <div style={{ color: 'red' }}>{error}</div>
+           error && (<div style={{ color: 'red' }}>{error}</div>)
           }
           <Button type="submit" variant="contained" color="primary" fullWidth style={{ marginTop: 20 }}>
             Sign Up

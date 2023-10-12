@@ -31,7 +31,7 @@ const LoginForm = () => {
         return;
       }
 
-      router.replace("dashboard");
+      router.replace("authhome");
     } catch (error) {
       console.log(error);
     }
@@ -74,7 +74,7 @@ const LoginForm = () => {
               </Button>
             </div>
             {
-              error && (<div>{error}</div>)
+              error && (<div style={{ color: 'red' }}>{error}</div>)
             }
             <div style={{ marginTop: '20px' }}>
               <Link href="/signup" style={{ marginTop: '4px', textDecoration: 'none', color: 'inherit' }}>
