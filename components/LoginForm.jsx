@@ -31,6 +31,8 @@ const LoginForm = () => {
         return;
       }
 
+      localStorage.setItem('email', email);
+
       router.replace("authhome");
     } catch (error) {
       console.log(error);
