@@ -1,7 +1,10 @@
 "use client";
 import React, { use, useEffect, useState } from 'react';
-import { Container, Typography, TextField, Button, Paper } from '@mui/material';
+import { Container, Grid, Typography, TextField, Button, Paper } from '@mui/material';
 const axios = require('axios');
+import { styled } from '@mui/system';
+
+// const TextField = withStyles(styles)(TextField);
 
 const Profile = () => {
     const [userData, setUserData] = useState(null);
@@ -21,8 +24,7 @@ const Profile = () => {
                 console.log('inside-loaduserprof-temp');
                 console.log(email);
                 const response = await axios.get(`/api/getUserData?email=${email}`);
-                // const radioDetails ='1212';
-                // const response = await axios.get(`/api/getUserData?radioDetails=1212`);
+
                 console.log('response fetched');
                 if (response.status === 200) {
                     const data = response.data;
@@ -52,66 +54,122 @@ const Profile = () => {
         <Container maxWidth="md">
             <Paper elevation={3} style={{ padding: 20, marginTop: 40 }}>
                 <Typography variant="h5">User Profile</Typography>
-                {userData && (
-                    <div>
-                        <TextField
-                            label="Name"
-                            variant="outlined"
-                            fullWidth
-                            margin="normal"
-                            value={userData.name}
-                            disabled
-                        />
-                        <TextField
-                            label="Email"
-                            variant="outlined"
-                            fullWidth
-                            margin="normal"
-                            value={userData.email}
-                            disabled
-                        />
-                        <TextField
-                            label="Contact Number"
-                            variant="outlined"
-                            fullWidth
-                            margin="normal"
-                            value={userData.contactNumber}
-                            disabled
-                        />
-                        <TextField
-                            label="Designation"
-                            variant="outlined"
-                            fullWidth
-                            margin="normal"
-                            value={userData.designation}
-                            disabled
-                        />
-                        <TextField
-                            label="Radio Details"
-                            variant="outlined"
-                            fullWidth
-                            margin="normal"
-                            value={userData.radioDetails}
-                            disabled
-                        />
-                        <TextField
-                            label="Radio Set Details"
-                            variant="outlined"
-                            fullWidth
-                            margin="normal"
-                            value={userData.radioSetDetails}
-                            disabled
-                        />
-                        <TextField
-                            label="Location"
-                            variant="outlined"
-                            fullWidth
-                            margin="normal"
-                            value={userData.location}
-                            disabled
-                        />
-                    </div>
-                )}
+                <Grid container spacing={2}>
+                <Grid item xs={4}>
+                    <TextField
+                        label="Name"
+                        variant="filled"
+                        fullWidth
+                        margin="normal"
+                        color="secondary"
+                        disabled
+                    />
+                    <TextField
+                        label="Email"
+                        variant="filled"
+                        fullWidth
+                        margin="normal"
+                        disabled
+                    />
+                    <TextField
+                        label="Contact Number"
+                        variant="filled"
+                        fullWidth
+                        margin="normal"
+                        disabled
+                    />
+                    <TextField
+                        label="Designation"
+                        variant="filled"
+                        fullWidth
+                        margin="normal"
+                        disabled
+                    />
+                    <TextField
+                        label="Radio Details"
+                        variant="filled"
+                        fullWidth
+                        margin="normal"
+                        disabled
+                    />
+                    <TextField
+                        label="Radio Set Details"
+                        variant="filled"
+                        fullWidth
+                        margin="normal"
+                        disabled
+                    />
+                    <TextField
+                        label="Location"
+                        variant="filled"
+                        fullWidth
+                        margin="normal"
+                        disabled
+                    />
+                    </Grid>
+                    <Grid item xs={6}>
+                    {userData && (
+                        <div>
+                            <TextField
+                                // label="Name"
+                                variant="outlined"
+                                fullWidth
+                                margin="normal"
+                                value={userData.name}
+                                disabled
+                            />
+                            <TextField
+                                // label="Email"
+                                variant="outlined"
+                                fullWidth
+                                margin="normal"
+                                value={userData.email}
+                                disabled
+                            />
+                            <TextField
+                                // label="Contact Number"
+                                variant="outlined"
+                                fullWidth
+                                margin="normal"
+                                value={userData.contactNumber}
+                                disabled
+                            />
+                            <TextField
+                                // label="Designation"
+                                variant="outlined"
+                                fullWidth
+                                margin="normal"
+                                value={userData.designation}
+                                disabled
+                            />
+                            <TextField
+                                // label="Radio Details"
+                                variant="outlined"
+                                fullWidth
+                                margin="normal"
+                                value={userData.radioDetails}
+                                disabled
+                            />
+                            <TextField
+                                // label="Radio Set Details"
+                                variant="outlined"
+                                fullWidth
+                                margin="normal"
+                                value={userData.radioSetDetails}
+                                disabled
+                            />
+                            <TextField
+                                // label="Location"
+                                variant="outlined"
+                                fullWidth
+                                margin="normal"
+                                value={userData.location}
+                                disabled
+                            />
+                        </div>
+                    )}
+                    </Grid>
+                    </Grid>
             </Paper>
         </Container>
     );

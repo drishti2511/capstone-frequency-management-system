@@ -11,20 +11,20 @@ export async function GET(req) {
     const url = new URL(req.url);
     const searchParams = url.searchParams;
     const email = searchParams.get('email');
-    console.log(email);
+   
     await connectMongoDB();
     
       
       if (!email) {
         return NextResponse.json({ error: 'Email is missing' }, { status: 400 });
       }
-      console.log(email);
+      // console.log(email);
       const userData = await UserProfile.findOne({ email:email });
   
       if (!userData) {
         return NextResponse.json({ error: 'User not found' }, { status: 404 });
       }
-      console.log(userData);
+      // console.log(userData);
       return NextResponse.json({ userData });
 
     } catch (error) {
