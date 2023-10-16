@@ -123,7 +123,7 @@ export default function AuthHome() {
                                     </Typography>
                                 </CardContent>
                                 <CardActions>
-                                    <Button onClick={() => router.push("addfreq")} size="small">Add Frequencies</Button>
+                                    <Button onClick={() => router.push("addfreq")} size="small">Add Bands</Button>
                                     <Button size="small">Delete Bands</Button>
                                 </CardActions>
                             </Card>

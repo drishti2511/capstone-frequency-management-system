@@ -64,27 +64,20 @@ const Navbar = () => {
 
   const handleProfileClick = () => {
     router.push("profile"); // Use router.push to navigate to the profile page
+   
   };
 
   const handleGoToHomePage = () => {
     router.push("authhome"); // Replace '/' with your home page URL
+
   };
 
 
 
   const handleLogout = async () => {
-    console.log("handle logout");
-    await signOut()
-      .then(() => {
-        localStorage.removeItem('email');
-        console.log('signing out');
-        console.log('now redirecting to home page');
-        router.push("home");
-      })
-      .catch((error) => {
-        console.error('Error during sign-out:', error);
-      });
-  };
+    localStorage.removeItem('email');
+    signOut({ callbackUrl: 'http://localhost:3000/home' });
+};
 
 
 
