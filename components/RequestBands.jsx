@@ -47,8 +47,10 @@ export default function FrequencyBands() {
 
   // Function to handle changing the selected frequency type
   const handleFrequencyTypeChange = (event) => {
-    const selectedType = frequencyTypeLabels(event.target.value);
-    setSelectedFrequencyType(selectedType);
+    const selectedType = event.target.value;
+    setSelectedFrequencyType(frequencyTypeLabels[selectedType]);
+    console.log(selectedFrequencyType);
+
   };
 
   console.log(selectedFrequencyType);
