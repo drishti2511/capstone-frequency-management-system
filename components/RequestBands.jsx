@@ -1,4 +1,3 @@
-// pages/frequency-bands.js
 "use client";
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
@@ -9,12 +8,14 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import Select, { SelectChangeEvent } from '@mui/material/Select'; // Import Select
-import MenuItem from '@mui/material/MenuItem'; // Import MenuItem
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
 import InputLabel from '@mui/material/InputLabel';
 import Typography from '@mui/material/Typography';
 import FormControl from '@mui/material/FormControl';
 import Box from '@mui/material/Box';
+import Checkbox from '@mui/material/Checkbox'; // Import Checkbox
+import { useSession } from 'next-auth/react';
 
 // Define the frequency type labels
 const frequencyTypeLabels = {
@@ -26,8 +27,12 @@ const frequencyTypeLabels = {
 };
 
 export default function FrequencyBands() {
+
+
     const [bands, setBands] = useState([]);
-    const [selectedFrequencyType, setSelectedFrequencyType] = useState(''); // State for the selected frequency type
+    const [selectedFrequencyType, setSelectedFrequencyType] = useState('');
+    const [selectedRows, setSelectedRows] = useState([]); // State to store selected rows
+    const { data: session } = useSession();
 
     useEffect(() => {
         async function fetchData() {
@@ -49,28 +54,43 @@ export default function FrequencyBands() {
         fetchData();
     }, []);
 
+    const handleSelectRow = (bandId) => {
+        if (session) {
+            const currentUserId = session.user.id;
+        setSelectedRows((prevSelectedRows) => {
+            if (prevSelectedRows.includes(bandId)) {
+                // return prevSelectedRows.filter((id) => id !== bandId);
+                const { [bandId]: removed, ...newSelection } = prevSelectedRows;
+                // Send a DELETE request to the backend to disassociate the user from the band
+                axios.delete('/api/bandselection', { data: { userId: currentUserId, bandId } });
+                return newSelection;
+            } else {
+                axios.post('/api/bandselection', { userId: currentUserId, bandId });
+                return [...prevSelectedRows, bandId];
+            }
+        });
+    }
+    };
+
+    const isRowSelected = (bandId) => selectedRows.includes(bandId);
+
     // Function to handle changing the selected frequency type
     const handleFrequencyTypeChange = (event) => {
         const selectedType = event.target.value;
         setSelectedFrequencyType(frequencyTypeLabels[selectedType]);
-        console.log(selectedFrequencyType);
-      };
-      
-
-    console.log(selectedFrequencyType);
+    };
 
     // Filter the bands based on the selected frequency type
-    const filteredBands = selectedFrequencyType ? bands.filter((band) => band.frequency_type === selectedFrequencyType) : bands;
-    console.log('checking whether freqeuncy type and selected frequency type is same');
-
+    const filteredBands = selectedFrequencyType
+        ? bands.filter((band) => band.frequency_type === selectedFrequencyType)
+        : bands;
 
     return (
         <div>
-            <Box display="flex" justifyContent="center" alignItems="center" mt-20>
+            <Box display="flex" justifyContent="center" alignItems="center" mt={2}>
                 <Typography variant="h3">Frequency Bands Available</Typography>
             </Box>
-            {/* Dropdown menu for selecting frequency type */}
-        
+
             <FormControl variant="standard" sx={{ m: 1, minWidth: 240 }}>
                 <InputLabel id="demo-simple-select-standard-label">Select Frequency Type</InputLabel>
                 <Select
@@ -93,10 +113,12 @@ export default function FrequencyBands() {
                 <Table>
                     <TableHead>
                         <TableRow>
+
                             <TableCell>Frequency Type</TableCell>
                             <TableCell>Frequency From</TableCell>
                             <TableCell>Frequency To</TableCell>
                             <TableCell>Channel Spacing</TableCell>
+                            <TableCell>Select Band</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -106,11 +128,17 @@ export default function FrequencyBands() {
                                 <TableCell>{band.frequency_fm}</TableCell>
                                 <TableCell>{band.frequency_to}</TableCell>
                                 <TableCell>{band.channel_spacing}</TableCell>
+                                <TableCell>
+                                    <Checkbox
+                                        checked={isRowSelected(band._id)}
+                                        onChange={() => handleSelectRow(band._id)}
+                                    />
+                                </TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
                 </Table>
             </TableContainer>
-        </div >
+        </div>
     );
 }
