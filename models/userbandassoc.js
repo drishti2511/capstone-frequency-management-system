@@ -2,13 +2,14 @@ import mongoose from 'mongoose';
 
 const userBandSchema = new mongoose.Schema({
     userId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
+        type: String,
+        // ref: 'User',
         required: true,
     },
     bandId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'freqBand',
+        type: String,
+        // type: text,
+        // ref: 'freqBand',
         required: true,
     },
 });

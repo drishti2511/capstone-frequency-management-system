@@ -6,6 +6,7 @@ import { styled } from '@mui/system';
 
 // const TextField = withStyles(styles)(TextField);
 
+
 const Profile = () => {
     const [userData, setUserData] = useState(null);
     //   console.log(email);
@@ -70,6 +71,7 @@ const Profile = () => {
                         fullWidth
                         margin="normal"
                         disabled
+
                     />
                     <TextField
                         label="Contact Number"
@@ -116,7 +118,7 @@ const Profile = () => {
                                 fullWidth
                                 margin="normal"
                                 value={userData.name}
-                                disabled
+                                
                             />
                             <TextField
                                 // label="Email"
@@ -124,7 +126,7 @@ const Profile = () => {
                                 fullWidth
                                 margin="normal"
                                 value={userData.email}
-                                disabled
+                                // disabled
                             />
                             <TextField
                                 // label="Contact Number"
@@ -132,7 +134,7 @@ const Profile = () => {
                                 fullWidth
                                 margin="normal"
                                 value={userData.contactNumber}
-                                disabled
+                                // disabled
                             />
                             <TextField
                                 // label="Designation"
@@ -140,7 +142,7 @@ const Profile = () => {
                                 fullWidth
                                 margin="normal"
                                 value={userData.designation}
-                                disabled
+                                // disabled
                             />
                             <TextField
                                 // label="Radio Details"
@@ -148,7 +150,7 @@ const Profile = () => {
                                 fullWidth
                                 margin="normal"
                                 value={userData.radioDetails}
-                                disabled
+                                // disabled
                             />
                             <TextField
                                 // label="Radio Set Details"
@@ -156,7 +158,7 @@ const Profile = () => {
                                 fullWidth
                                 margin="normal"
                                 value={userData.radioSetDetails}
-                                disabled
+                                // disabled
                             />
                             <TextField
                                 // label="Location"
@@ -164,7 +166,8 @@ const Profile = () => {
                                 fullWidth
                                 margin="normal"
                                 value={userData.location}
-                                disabled
+                                style={{color:'red'}}
+                                // disabled
                             />
                         </div>
                     )}

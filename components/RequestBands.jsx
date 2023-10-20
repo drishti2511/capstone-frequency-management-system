@@ -54,23 +54,42 @@ export default function FrequencyBands() {
         fetchData();
     }, []);
 
-    const handleSelectRow = (bandId) => {
+    const handleSelectRow = async (bandId) => {
         if (session) {
-            const currentUserId = session.user.id;
-        setSelectedRows((prevSelectedRows) => {
+          const currentUserId = session.user.email;
+          const userId = currentUserId;
+          console.log('session value');
+          console.log(session);
+          setSelectedRows((prevSelectedRows) => {
             if (prevSelectedRows.includes(bandId)) {
-                // return prevSelectedRows.filter((id) => id !== bandId);
-                const { [bandId]: removed, ...newSelection } = prevSelectedRows;
-                // Send a DELETE request to the backend to disassociate the user from the band
-                axios.delete('/api/bandselection', { data: { userId: currentUserId, bandId } });
-                return newSelection;
+              const { [bandId]: removed, ...newSelection } = prevSelectedRows;
+      
+              // Send a DELETE request to the backend to disassociate the user from the band using fetch
+              fetch(`/api/bandselection?userId=${currentUserId}&bandId=${bandId}`, {
+                method: 'DELETE',
+              });
+      
+              return newSelection;
             } else {
-                axios.post('/api/bandselection', { userId: currentUserId, bandId });
-                return [...prevSelectedRows, bandId];
+              console.log('user_id=', currentUserId);
+              console.log('band_id=', bandId);
+              console.log('posting request');
+      
+              // Send a POST request to associate the user with the band using fetch
+              fetch(`/api/bandselection`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ userId, bandId }),
+              });
+      
+              return [...prevSelectedRows, bandId];
             }
-        });
-    }
-    };
+          });
+        }
+      };
+      
 
     const isRowSelected = (bandId) => selectedRows.includes(bandId);
 
