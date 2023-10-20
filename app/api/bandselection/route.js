@@ -57,3 +57,20 @@ export async function DELETE(req) {
     }
 
 }
+
+
+
+export async function GET(req) {
+    try {
+      await connectMongoDB();
+      const userBands = await UserBand.find().select('bandId');
+  
+      return NextResponse.json(userBands, { status: 200 });
+    } catch (error) {
+      console.error('An error occurred while fetching frequency bands:', error);
+      return NextResponse.json(
+        { message: "An error occurred while fetching frequency bands." },
+        { status: 500 }
+      );
+    }
+  }

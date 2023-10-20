@@ -31,19 +31,18 @@ const  availableRowStyle= { backgroundColor: 'rgba(0, 255, 0.5, 0.8)' };
 const selectedRowStyle = { backgroundColor: 'rgba(255, 0, 0, 0.5)' };
 
 
-export default function FrequencyBands() {
+export default function DeleteFrequencyBands() {
 
 
     const [bands, setBands] = useState([]);
     const [selectedFrequencyType, setSelectedFrequencyType] = useState('');
     const [selectedRows, setSelectedRows] = useState([]); // State to store selected rows
-    const [overallSelectedBands, setOverallSelectedBands] = useState([]); 
     const { data: session } = useSession();
 
     useEffect(() => {
         async function fetchData() {
             try {
-                const response = await axios.get('/api/reqfreq'); // Replace with your API endpoint
+                const response = await axios.get('/api/deletebands'); // Replace with your API endpoint
 
                 // Map the received data to use the labels for frequency_type
                 const bandsWithLabels = response.data.map((band) => ({
@@ -60,8 +59,6 @@ export default function FrequencyBands() {
         fetchData();
     }, []);
 
- 
-
     const handleSelectRow = async (bandId) => {
         if (session) {
             const currentUserId = session.user.email;
@@ -73,65 +70,27 @@ export default function FrequencyBands() {
                 if (!Array.isArray(prevSelectedRows)) {
                     prevSelectedRows = [];
                 }
+                if (Array.isArray(prevSelectedRows) && prevSelectedRows.includes(bandId)) {
+                    const { [bandId]: removed, ...newSelection } = prevSelectedRows;
 
-                const newSelectedRows = [...prevSelectedRows];
-    
-                if (newSelectedRows.includes(bandId)) {
-                    // If the bandId is already in the array, remove it
-                    const index = newSelectedRows.indexOf(bandId);
-                    if (index !== -1) {
-                        newSelectedRows.splice(index, 1);
-                    }
-    
                     // Send a DELETE request to the backend to disassociate the user from the band using fetch
-                    fetch('/api/bandselection', {
+                    fetch('/api/deletebands', {
                         method: 'DELETE',
                         headers: {
                             'Content-Type': 'application/json',
                         },
                         body: JSON.stringify({ userId, bandId }),
                     });
-                } else {
-                    console.log('user_id=', currentUserId);
-                    console.log('band_id=', bandId);
-                    console.log('posting request');
-    
-                    // Send a POST request to associate the user with the band using fetch
-                    fetch(`/api/bandselection`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ userId, bandId }),
-                    });
-    
-                    // Add the bandId to the selected rows
-                    newSelectedRows.push(bandId);
-                }
 
-               
-                return newSelectedRows;
+                    return newSelection;
+                } 
             });
         }
-        
-        try {
-            const response = await axios.get('/api/bandselection'); // Replace with your API endpoint
-            const bandIds = response.data.map((item) => item.bandId);
-            setOverallSelectedBands(bandIds);
-        } catch (error) {
-            console.error(error);
-        }
-
     };
 
 
-
     // const isRowSelected = (bandId) => selectedRows.includes(bandId);
-const isRowSelected = (bandId) => {
-  return (
-    Array.isArray(selectedRows) && (selectedRows.includes(bandId) || overallSelectedBands.includes(bandId))
-  );
-};
+    const isRowSelected = (bandId) => Array.isArray(selectedRows) && selectedRows.includes(bandId);
 
 
     // Function to handle changing the selected frequency type

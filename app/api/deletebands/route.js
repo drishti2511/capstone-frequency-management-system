@@ -2,46 +2,40 @@ import { connectDB } from '@/lib/mongodb'; // Adjust the import as needed
 import UserBand from '@/models/userbandassoc'; // Adjust the import as needed
 import freqBand from '@/models/freqband';
 
-export default async function handler(req, res) {
-if (req.method === 'DELETE') {
-    const { bandId } = req.body;
+export async function DELETE(req) {
 
     try {
         // Delete all user-band associations with the specified bandId
-        const deletedAssociations = await UserBand.deleteMany({ bandId });
+        const { userId, bandId } = await req.json();
+        console.log('user and band id and inside delete function');
+        console.log(userId, bandId);
+        await connectMongoDB();
+        const deletedAssociation = await UserBand.findOneAndDelete({ bandId });
 
-        if (deletedAssociations.deletedCount === 0) {
-            return res.status(404).json({ message: 'No associations found for the band.' });
+        if (!deletedAssociation) {
+            return NextResponse.json({ message: 'User-band not found.' }, { status: 404 });
+        } else {
+            return NextResponse.json({ message: 'User unselected the band successfully.' }, { status: 200 });
         }
-        return res.status(200).json({ message: 'Band and associated user selections deleted successfully.' });
-
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ message: 'An error occurred while deleting the band and associated user selections.' });
+        return NextResponse.json({ message: 'An error occurred while unselecting the band.' }, { status: 500 });
     }
-} 
 
-else if (req.method === 'GET') {
+}
+
+
+export async function GET(req) {
     try {
-        // Retrieve all available bands
-        const availableBands = await freqBand.find({});
-        const bandIds = availableBands.map((band) => band._id);
-
-        // Find the bands associated with the given user
-        const userAssociations = await UserBand.find({ userId });
-
-        // Create a set of band IDs associated with the user
-        const userBandIds = new Set(userAssociations.map((association) => association.bandId));
-
-        // Filter available bands based on user associations
-        const filteredBands = availableBands.filter((band) => !userBandIds.has(band._id));
-
-        return res.status(200).json(filteredBands);
+      await connectMongoDB();
+      const frequencyBands = await UserBand.find();
+  
+      return NextResponse.json(frequencyBands, { status: 200 });
     } catch (error) {
-        console.error(error);
-        return res.status(500).json({ message: 'An error occurred while fetching available bands.' });
+      console.error('An error occurred while fetching frequency bands:', error);
+      return NextResponse.json(
+        { message: "An error occurred while fetching frequency bands." },
+        { status: 500 }
+      );
     }
-} else {
-    return res.status(405).end(); // Method Not Allowed
-}
-}
+  }
