@@ -26,6 +26,11 @@ const frequencyTypeLabels = {
     '5': 'UHF-Band III',
 };
 
+
+const  availableRowStyle= { backgroundColor: 'rgba(0, 255, 0.5, 0.8)' };
+const selectedRowStyle = { backgroundColor: 'rgba(255, 0, 0, 0.5)' };
+
+
 export default function FrequencyBands() {
 
 
@@ -56,42 +61,54 @@ export default function FrequencyBands() {
 
     const handleSelectRow = async (bandId) => {
         if (session) {
-          const currentUserId = session.user.email;
-          const userId = currentUserId;
-          console.log('session value');
-          console.log(session);
-          setSelectedRows((prevSelectedRows) => {
-            if (prevSelectedRows.includes(bandId)) {
-              const { [bandId]: removed, ...newSelection } = prevSelectedRows;
-      
-              // Send a DELETE request to the backend to disassociate the user from the band using fetch
-              fetch(`/api/bandselection?userId=${currentUserId}&bandId=${bandId}`, {
-                method: 'DELETE',
-              });
-      
-              return newSelection;
-            } else {
-              console.log('user_id=', currentUserId);
-              console.log('band_id=', bandId);
-              console.log('posting request');
-      
-              // Send a POST request to associate the user with the band using fetch
-              fetch(`/api/bandselection`, {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ userId, bandId }),
-              });
-      
-              return [...prevSelectedRows, bandId];
-            }
-          });
-        }
-      };
-      
+            const currentUserId = session.user.email;
+            const userId = currentUserId;
+            console.log('session value');
+            console.log(session);
+            setSelectedRows((prevSelectedRows) => {
 
-    const isRowSelected = (bandId) => selectedRows.includes(bandId);
+                if (!Array.isArray(prevSelectedRows)) {
+                    prevSelectedRows = [];
+                }
+
+                
+                if (Array.isArray(prevSelectedRows) && prevSelectedRows.includes(bandId)) {
+                    const { [bandId]: removed, ...newSelection } = prevSelectedRows;
+
+                    // Send a DELETE request to the backend to disassociate the user from the band using fetch
+                    fetch('/api/bandselection', {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ userId, bandId }),
+                    });
+
+                    return newSelection;
+                } else {
+                    console.log('user_id=', currentUserId);
+                    console.log('band_id=', bandId);
+                    console.log('posting request');
+
+                    // Send a POST request to associate the user with the band using fetch
+                    fetch(`/api/bandselection`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ userId, bandId }),
+                    });
+
+                    return [...prevSelectedRows, bandId];
+                }
+            });
+        }
+    };
+
+
+    // const isRowSelected = (bandId) => selectedRows.includes(bandId);
+    const isRowSelected = (bandId) => Array.isArray(selectedRows) && selectedRows.includes(bandId);
+
 
     // Function to handle changing the selected frequency type
     const handleFrequencyTypeChange = (event) => {
@@ -142,7 +159,14 @@ export default function FrequencyBands() {
                     </TableHead>
                     <TableBody>
                         {filteredBands.map((band) => (
-                            <TableRow key={band._id}>
+                            <TableRow
+                                key={band._id}
+                                style={
+                                    isRowSelected(band._id)
+                                        ? selectedRowStyle
+                                        : availableRowStyle
+                                }
+                            >
                                 <TableCell>{band.frequency_type}</TableCell>
                                 <TableCell>{band.frequency_fm}</TableCell>
                                 <TableCell>{band.frequency_to}</TableCell>
