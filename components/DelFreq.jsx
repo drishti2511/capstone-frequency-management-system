@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Table from '@mui/material/Table';
@@ -26,32 +27,24 @@ const frequencyTypeLabels = {
     '5': 'UHF-Band III',
 };
 
-
-const  availableRowStyle= { backgroundColor: 'rgba(0, 255, 0.5, 0.8)' };
+const availableRowStyle = { backgroundColor: 'rgba(0, 255, 0.5, 0.8)' };
 const selectedRowStyle = { backgroundColor: 'rgba(255, 0, 0, 0.5)' };
 
-
 export default function DeleteFrequencyBands() {
-
-    //bands store the band_ids which are already in use, I need the complete band info using this band_id
     const [bands, setBands] = useState([]);
     const [selectedFrequencyType, setSelectedFrequencyType] = useState('');
-    const [selectedRows, setSelectedRows] = useState([]); // State to store selected rows
-    const[bandData, setBandData] = useState([]);
+    const [selectedRows, setSelectedRows] = useState([]);
+    const [bandData, setBandData] = useState([]); // Initialize with an empty array
     const { data: session } = useSession();
-
-
 
     useEffect(() => {
         async function fetchData() {
             try {
-                const response = await axios.get('/api/deletebands'); // Replace with your API endpoint
-
+                const response = await axios.get('/api/deletebands');
                 const bandsWithLabels = response.data.map((band) => ({
                     ...band,
                     frequency_type: frequencyTypeLabels[band.frequency_type],
                 }));
-
                 setBands(bandsWithLabels);
             } catch (error) {
                 console.error(error);
@@ -61,87 +54,70 @@ export default function DeleteFrequencyBands() {
         fetchData();
     }, []);
 
-  console.log('checking bands ');
-  console.log(bands);
+    useEffect(() => {
+        async function fetchData2() {
+            const bandDataArray = [];
+            for (const bandId of bands) {
+                try {
+                    const response = await axios.get(`/api/bandinfo?bandId=${bandId.bandId}`);
+                    console.log('response obtained is: ');
+                    console.log(response.data);
 
+                    const bandWithLabel = {
+                        ...response.data,
+                        frequency_type: frequencyTypeLabels[response.data.frequency_type],
+                    };
 
-  useEffect(() => {
-    async function fetchData2() {
-        const bandDataArray = [];
-        for (const bandId of bands) {
-            console.log('band_id : ', bandId.bandId);
-            const id = bandId.bandId;
-            console.log('id : ', id);
-            try {
-                const response = await axios.get(`/api/bandinfo?bandId=${id}`);
-                console.log('response obtained is: ');
-                console.log(response.data);
-              
-                const bandWithLabel = {
-                    ...response.data,
-                    frequency_type: frequencyTypeLabels[response.data.frequency_type],
-                };
-
-                bandDataArray.push(bandWithLabel);
-                setBandData(bandDataArray);
-            } catch (error) {
-                console.error(`Error fetching data for band ID ${id}:`, error);
+                    // console.log('band with label is: ', bandWithLabel);
+                    bandDataArray.push(bandWithLabel);
+                } catch (error) {
+                    console.error(`Error fetching data for band ID ${bandId.bandId}:`, error);
+                }
             }
+
+            setBandData(bandDataArray);
         }
 
-        // setBandData(bandDataArray);
-    }
-
-    fetchData2();
-}, [bands]);
-
-console.log('checking bands data ');
-console.log(bandData);
+        fetchData2();
+    }, [bands]);
 
     const handleSelectRow = async (bandId) => {
-        if (session) {
-            const currentUserId = session.user.email;
-            const userId = currentUserId;
-            console.log('session value');
-            console.log(session);
-            setSelectedRows((prevSelectedRows) => {
-
-                if (!Array.isArray(prevSelectedRows)) {
-                    prevSelectedRows = [];
-                }
-                if (Array.isArray(prevSelectedRows) && prevSelectedRows.includes(bandId)) {
-                    const { [bandId]: removed, ...newSelection } = prevSelectedRows;
-
-                    // Send a DELETE request to the backend to disassociate the user from the band using fetch
-                    fetch('/api/deletebands', {
-                        method: 'DELETE',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({  bandId }),
-                    });
-
-                    return newSelection;
-                } 
-            });
-        }
+        console.log('session value');
+        console.log(session);
+        setBandData((prevBandData) => {
+            if (!Array.isArray(prevBandData)) {
+                prevBandData = [];
+            }
+            if (Array.isArray(prevBandData) && prevBandData.some((band) => band._id === bandId)) {
+                // Send a DELETE request to the backend to disassociate the user from the band using fetch
+                fetch('/api/deletebands', {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ bandId }),
+                });
+                return prevBandData.filter((band) => band._id !== bandId);
+            }
+            return prevBandData;
+        });
     };
 
-
-    // const isRowSelected = (bandId) => selectedRows.includes(bandId);
     const isRowSelected = (bandId) => Array.isArray(selectedRows) && selectedRows.includes(bandId);
 
-
-    // Function to handle changing the selected frequency type
     const handleFrequencyTypeChange = (event) => {
         const selectedType = event.target.value;
+        console.log('selected type is : ', selectedType);
         setSelectedFrequencyType(frequencyTypeLabels[selectedType]);
     };
 
-    // Filter the bands based on the selected frequency type
+
+
     const filteredBands = selectedFrequencyType
-        ? bandData.filter((band) => bandData.frequency_type === selectedFrequencyType)
-        : bandData;
+        ? bands.filter((band) => band.frequency_type === selectedFrequencyType)
+        : bands;
+
+    
 
     return (
         <div>
@@ -171,7 +147,6 @@ console.log(bandData);
                 <Table>
                     <TableHead>
                         <TableRow>
-
                             <TableCell>Frequency Type</TableCell>
                             <TableCell>Frequency From</TableCell>
                             <TableCell>Frequency To</TableCell>
@@ -181,9 +156,7 @@ console.log(bandData);
                     </TableHead>
                     <TableBody>
                         {filteredBands.map((band) => (
-                            <TableRow
-                                key={band._id}
-                            >
+                            <TableRow key={band._id}>
                                 <TableCell>{band.frequency_type}</TableCell>
                                 <TableCell>{band.frequency_fm}</TableCell>
                                 <TableCell>{band.frequency_to}</TableCell>
@@ -202,5 +175,3 @@ console.log(bandData);
         </div>
     );
 }
-
-
