@@ -1,5 +1,5 @@
 import Navbar from "@/components/Navbar";
-import DeleteFrequencyBands from "../../components/RequestBands";
+import DeleteFrequencyBands from "../../components/DelFreq";
 
 
 export default function Dashboard() {
@@ -7,7 +7,7 @@ export default function Dashboard() {
     return (
       <main>
    <Navbar/>
-    <ReqFreq/>
+    <DeleteFrequencyBands/>
       </main>
      
     );

@@ -33,18 +33,20 @@ const selectedRowStyle = { backgroundColor: 'rgba(255, 0, 0, 0.5)' };
 
 export default function DeleteFrequencyBands() {
 
-
+    //bands store the band_ids which are already in use, I need the complete band info using this band_id
     const [bands, setBands] = useState([]);
     const [selectedFrequencyType, setSelectedFrequencyType] = useState('');
     const [selectedRows, setSelectedRows] = useState([]); // State to store selected rows
+    const[bandData, setBandData] = useState([]);
     const { data: session } = useSession();
+
+
 
     useEffect(() => {
         async function fetchData() {
             try {
                 const response = await axios.get('/api/deletebands'); // Replace with your API endpoint
 
-                // Map the received data to use the labels for frequency_type
                 const bandsWithLabels = response.data.map((band) => ({
                     ...band,
                     frequency_type: frequencyTypeLabels[band.frequency_type],
@@ -58,6 +60,43 @@ export default function DeleteFrequencyBands() {
 
         fetchData();
     }, []);
+
+  console.log('checking bands ');
+  console.log(bands);
+
+
+  useEffect(() => {
+    async function fetchData2() {
+        const bandDataArray = [];
+        for (const bandId of bands) {
+            console.log('band_id : ', bandId.bandId);
+            const id = bandId.bandId;
+            console.log('id : ', id);
+            try {
+                const response = await axios.get(`/api/bandinfo?bandId=${id}`);
+                console.log('response obtained is: ');
+                console.log(response.data);
+              
+                const bandWithLabel = {
+                    ...response.data,
+                    frequency_type: frequencyTypeLabels[response.data.frequency_type],
+                };
+
+                bandDataArray.push(bandWithLabel);
+                setBandData(bandDataArray);
+            } catch (error) {
+                console.error(`Error fetching data for band ID ${id}:`, error);
+            }
+        }
+
+        // setBandData(bandDataArray);
+    }
+
+    fetchData2();
+}, [bands]);
+
+console.log('checking bands data ');
+console.log(bandData);
 
     const handleSelectRow = async (bandId) => {
         if (session) {
@@ -79,7 +118,7 @@ export default function DeleteFrequencyBands() {
                         headers: {
                             'Content-Type': 'application/json',
                         },
-                        body: JSON.stringify({ userId, bandId }),
+                        body: JSON.stringify({  bandId }),
                     });
 
                     return newSelection;
@@ -101,13 +140,13 @@ export default function DeleteFrequencyBands() {
 
     // Filter the bands based on the selected frequency type
     const filteredBands = selectedFrequencyType
-        ? bands.filter((band) => band.frequency_type === selectedFrequencyType)
-        : bands;
+        ? bandData.filter((band) => bandData.frequency_type === selectedFrequencyType)
+        : bandData;
 
     return (
         <div>
             <Box display="flex" justifyContent="center" alignItems="center" mt={2}>
-                <Typography variant="h3">Frequency Bands Available</Typography>
+                <Typography variant="h3">Delete Frequency Bands</Typography>
             </Box>
 
             <FormControl variant="standard" sx={{ m: 1, minWidth: 240 }}>
@@ -144,11 +183,6 @@ export default function DeleteFrequencyBands() {
                         {filteredBands.map((band) => (
                             <TableRow
                                 key={band._id}
-                                style={
-                                    isRowSelected(band._id)
-                                        ? selectedRowStyle
-                                        : availableRowStyle
-                                }
                             >
                                 <TableCell>{band.frequency_type}</TableCell>
                                 <TableCell>{band.frequency_fm}</TableCell>
@@ -168,3 +202,5 @@ export default function DeleteFrequencyBands() {
         </div>
     );
 }
+
+

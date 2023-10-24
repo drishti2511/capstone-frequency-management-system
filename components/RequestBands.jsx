@@ -40,6 +40,7 @@ export default function FrequencyBands() {
     const [overallSelectedBands, setOverallSelectedBands] = useState([]); 
     const { data: session } = useSession();
 
+    
     useEffect(() => {
         async function fetchData() {
             try {

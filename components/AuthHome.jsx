@@ -124,7 +124,7 @@ export default function AuthHome() {
                                 </CardContent>
                                 <CardActions>
                                     <Button onClick={() => router.push("addfreq")} size="small">Add Bands</Button>
-                                    <Button size="small">Delete Bands</Button>
+                                    <Button onClick={() => router.push("deletebands")} size="small">Delete Bands</Button>
                                 </CardActions>
                             </Card>
                         </Grid>

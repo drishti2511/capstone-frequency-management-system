@@ -1,14 +1,13 @@
-import { connectDB } from '@/lib/mongodb'; // Adjust the import as needed
+import { connectMongoDB } from '@/lib/mongodb'; // Adjust the import as needed
 import UserBand from '@/models/userbandassoc'; // Adjust the import as needed
-import freqBand from '@/models/freqband';
+import { NextResponse } from "next/server";
 
 export async function DELETE(req) {
 
     try {
         // Delete all user-band associations with the specified bandId
-        const { userId, bandId } = await req.json();
-        console.log('user and band id and inside delete function');
-        console.log(userId, bandId);
+        const { bandId } = await req.json();
+        console.log(bandId);
         await connectMongoDB();
         const deletedAssociation = await UserBand.findOneAndDelete({ bandId });
 
@@ -29,7 +28,6 @@ export async function GET(req) {
     try {
       await connectMongoDB();
       const frequencyBands = await UserBand.find();
-  
       return NextResponse.json(frequencyBands, { status: 200 });
     } catch (error) {
       console.error('An error occurred while fetching frequency bands:', error);
