@@ -28,11 +28,11 @@ const SignupForm = () => {
       return;
     }
 
-    setPasswordStrength(zxcvbn(password).score);
-    if(passwordStrength < 3) {
-      setError("Password is weak. Please choose a stronger password");
-      return;
-    }
+    // setPasswordStrength(zxcvbn(password).score);
+    // if(passwordStrength < 1) {
+    //   setError("Password is weak. Please choose a stronger password");
+    //   return;
+    // }
 
     try {
       const resUserExists = await fetch("api/userExists", {
@@ -50,6 +50,8 @@ const SignupForm = () => {
         return;
       }
  
+      console.log('signing up');
+
       const res = await fetch("api/signup", {
         method: "POST",
         headers: {
@@ -61,7 +63,8 @@ const SignupForm = () => {
           repassword,
         }),
       });
-
+      
+      console.log(res);
       if (res.ok) {
         const form = e.target;
         form.reset();

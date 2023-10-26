@@ -61,6 +61,22 @@ export default function FrequencyBands() {
 
 
 
+
+    useEffect(() => {
+        async function fetchData() {
+            try {
+                const response = await axios.get('/api/bandselection');
+                console.log('resposne obtained about already used bands',response);
+                const bandIds = response.data.map((item) => item.bandId);
+                setOverallSelectedBands(bandIds);
+            } catch (error) {
+                console.error(error);
+            }
+        }
+        fetchData();
+    }, []);
+
+
     const handleSelectRow = async (bandId) => {
         if (session) {
             const currentUserId = session.user.email;
@@ -106,6 +122,7 @@ export default function FrequencyBands() {
 
         try {
             const response = await axios.get('/api/bandselection');
+            console.log('resposne obtained about already used bands',response);
             const bandIds = response.data.map((item) => item.bandId);
             setOverallSelectedBands(bandIds);
         } catch (error) {
@@ -113,10 +130,11 @@ export default function FrequencyBands() {
         }
     };
 
+    console.log('overall selected bands : ',overallSelectedBands);
 
     const isRowSelected = (bandId) => {
         return (
-            Array.isArray(selectedRows) && (selectedRows.includes(bandId) || overallSelectedBands.includes(bandId))
+            (Array.isArray(selectedRows) && selectedRows.includes(bandId)) || overallSelectedBands.includes(bandId)
         );
     };
 

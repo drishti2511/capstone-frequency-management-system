@@ -64,8 +64,9 @@ export async function GET(req) {
     try {
       await connectMongoDB();
       const userBands = await UserBand.find().select('bandId');
-  
+      console.log('overall user bands obtained : ',userBands);
       return NextResponse.json(userBands, { status: 200 });
+
     } catch (error) {
       console.error('An error occurred while fetching frequency bands:', error);
       return NextResponse.json(

@@ -168,7 +168,7 @@ const CreateProfile = () => {
          error && (<div style={{ color: 'red' }}>{error}</div>)
         } */}
         <Button type="submit" variant="contained" color="primary" fullWidth style={{ marginTop: 20 }}>
-          Sign Up
+         Submit
         </Button>
       </form>
     </Paper>
