@@ -54,6 +54,8 @@ export default function DeleteFrequencyBands() {
         fetchData();
     }, []);
 
+    console.log('bands to del: ', bands);
+
     useEffect(() => {
         async function fetchData2() {
             const bandDataArray = [];
@@ -80,6 +82,8 @@ export default function DeleteFrequencyBands() {
 
         fetchData2();
     }, [bands]);
+
+    console.log('band data : ',bandData);
 
     const handleSelectRow = async (bandId) => {
         console.log('session value');
@@ -114,8 +118,8 @@ export default function DeleteFrequencyBands() {
 
 
     const filteredBands = selectedFrequencyType
-        ? bands.filter((band) => band.frequency_type === selectedFrequencyType)
-        : bands;
+        ? bandData.filter((band) => band.frequency_type === selectedFrequencyType)
+        : bandData;
 
     
 
