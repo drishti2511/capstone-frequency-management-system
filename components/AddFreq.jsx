@@ -52,10 +52,10 @@ const AddFreq = () => {
             console.log('checking res.ok');
             console.log(res.ok);
             if (res.ok) {
-                console.log('pushing in addfreq to the router');
+                console.log('pushing in addfreq to the router-1');
                 const form = e.target;
                 form.reset();
-                console.log('pushing in addfreq to the router');
+                console.log('pushing in addfreq to the router-2');
                 router.push("addfreq");
             } else {
                 console.log("Adding frequency band failed.");

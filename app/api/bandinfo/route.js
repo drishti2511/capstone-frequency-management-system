@@ -5,8 +5,6 @@ import mongoose from 'mongoose';
 
 export async function GET(req) {
   try {
-
-
     const url = new URL(req.url);
     const searchParams = url.searchParams;
     const bandId = searchParams.get('bandId');

@@ -27,7 +27,7 @@ const frequencyTypeLabels = {
 };
 
 
-const  availableRowStyle= { backgroundColor: 'rgba(0, 255, 0.5, 0.8)' };
+const availableRowStyle = { backgroundColor: 'rgba(0, 255, 0.5, 0.8)' };
 const selectedRowStyle = { backgroundColor: 'rgba(255, 0, 0, 0.5)' };
 
 
@@ -37,10 +37,10 @@ export default function FrequencyBands() {
     const [bands, setBands] = useState([]);
     const [selectedFrequencyType, setSelectedFrequencyType] = useState('');
     const [selectedRows, setSelectedRows] = useState([]); // State to store selected rows
-    const [overallSelectedBands, setOverallSelectedBands] = useState([]); 
+    const [overallSelectedBands, setOverallSelectedBands] = useState([]);
     const { data: session } = useSession();
 
-    
+
     useEffect(() => {
         async function fetchData() {
             try {
@@ -61,7 +61,7 @@ export default function FrequencyBands() {
         fetchData();
     }, []);
 
- 
+
 
     const handleSelectRow = async (bandId) => {
         if (session) {
@@ -76,14 +76,14 @@ export default function FrequencyBands() {
                 }
 
                 const newSelectedRows = [...prevSelectedRows];
-    
+
                 if (newSelectedRows.includes(bandId)) {
                     // If the bandId is already in the array, remove it
                     const index = newSelectedRows.indexOf(bandId);
                     if (index !== -1) {
                         newSelectedRows.splice(index, 1);
                     }
-    
+
                     // Send a DELETE request to the backend to disassociate the user from the band using fetch
                     fetch('/api/bandselection', {
                         method: 'DELETE',
@@ -96,7 +96,7 @@ export default function FrequencyBands() {
                     console.log('user_id=', currentUserId);
                     console.log('band_id=', bandId);
                     console.log('posting request');
-    
+
                     // Send a POST request to associate the user with the band using fetch
                     fetch(`/api/bandselection`, {
                         method: 'POST',
@@ -105,16 +105,16 @@ export default function FrequencyBands() {
                         },
                         body: JSON.stringify({ userId, bandId }),
                     });
-    
+
                     // Add the bandId to the selected rows
                     newSelectedRows.push(bandId);
                 }
 
-               
+
                 return newSelectedRows;
             });
         }
-        
+
         try {
             const response = await axios.get('/api/bandselection'); // Replace with your API endpoint
             const bandIds = response.data.map((item) => item.bandId);
@@ -123,16 +123,18 @@ export default function FrequencyBands() {
             console.error(error);
         }
 
+
+
     };
 
 
-
-    // const isRowSelected = (bandId) => selectedRows.includes(bandId);
-const isRowSelected = (bandId) => {
-  return (
-    Array.isArray(selectedRows) && (selectedRows.includes(bandId) || overallSelectedBands.includes(bandId))
-  );
-};
+   
+ 
+    const isRowSelected = (bandId) => {
+        return (
+            Array.isArray(selectedRows) && (selectedRows.includes(bandId) || overallSelectedBands.includes(bandId))
+        );
+    };
 
 
     // Function to handle changing the selected frequency type
