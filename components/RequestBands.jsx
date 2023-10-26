@@ -44,9 +44,7 @@ export default function FrequencyBands() {
     useEffect(() => {
         async function fetchData() {
             try {
-                const response = await axios.get('/api/reqfreq'); // Replace with your API endpoint
-
-                // Map the received data to use the labels for frequency_type
+                const response = await axios.get('/api/reqfreq');
                 const bandsWithLabels = response.data.map((band) => ({
                     ...band,
                     frequency_type: frequencyTypeLabels[band.frequency_type],
@@ -69,23 +67,15 @@ export default function FrequencyBands() {
             const userId = currentUserId;
             console.log('session value');
             console.log(session);
-            setSelectedRows((prevSelectedRows) => {
-
-                if (!Array.isArray(prevSelectedRows)) {
-                    prevSelectedRows = [];
-                }
-
-                const newSelectedRows = [...prevSelectedRows];
-
-                if (newSelectedRows.includes(bandId)) {
+            try {
+                if (selectedRows.includes(bandId)) {
                     // If the bandId is already in the array, remove it
-                    const index = newSelectedRows.indexOf(bandId);
+                    const index = selectedRows.indexOf(bandId);
                     if (index !== -1) {
-                        newSelectedRows.splice(index, 1);
+                        selectedRows.splice(index, 1);
                     }
-
-                    // Send a DELETE request to the backend to disassociate the user from the band using fetch
-                    fetch('/api/bandselection', {
+    
+                    await fetch('/api/bandselection', {
                         method: 'DELETE',
                         headers: {
                             'Content-Type': 'application/json',
@@ -96,40 +86,34 @@ export default function FrequencyBands() {
                     console.log('user_id=', currentUserId);
                     console.log('band_id=', bandId);
                     console.log('posting request');
-
-                    // Send a POST request to associate the user with the band using fetch
-                    fetch(`/api/bandselection`, {
+    
+                    await fetch(`/api/bandselection`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
                         },
                         body: JSON.stringify({ userId, bandId }),
                     });
-
-                    // Add the bandId to the selected rows
-                    newSelectedRows.push(bandId);
+    
+                    selectedRows.push(bandId);
                 }
-
-
-                return newSelectedRows;
-            });
+    
+                setSelectedRows([...selectedRows]);
+            } catch (error) {
+                console.error(error);
+            }
         }
 
         try {
-            const response = await axios.get('/api/bandselection'); // Replace with your API endpoint
+            const response = await axios.get('/api/bandselection');
             const bandIds = response.data.map((item) => item.bandId);
             setOverallSelectedBands(bandIds);
         } catch (error) {
             console.error(error);
         }
-
-
-
     };
 
 
-   
- 
     const isRowSelected = (bandId) => {
         return (
             Array.isArray(selectedRows) && (selectedRows.includes(bandId) || overallSelectedBands.includes(bandId))
@@ -137,13 +121,13 @@ export default function FrequencyBands() {
     };
 
 
-    // Function to handle changing the selected frequency type
+
     const handleFrequencyTypeChange = (event) => {
         const selectedType = event.target.value;
         setSelectedFrequencyType(frequencyTypeLabels[selectedType]);
     };
 
-    // Filter the bands based on the selected frequency type
+
     const filteredBands = selectedFrequencyType
         ? bands.filter((band) => band.frequency_type === selectedFrequencyType)
         : bands;
