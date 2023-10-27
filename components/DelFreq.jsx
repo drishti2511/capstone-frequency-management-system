@@ -87,29 +87,6 @@ export default function DeleteFrequencyBands() {
 
     console.log('band data : ', bandData);
 
-    // const handleSelectRow = async (bandId) => {
-    //     console.log('session value');
-    //     console.log(session);
-    //     setBandData((prevBandData) => {
-    //         if (!Array.isArray(prevBandData)) {
-    //             prevBandData = [];
-    //         }
-    //         if (Array.isArray(prevBandData) && prevBandData.some((band) => band._id === bandId)) {
-    //             // Send a DELETE request to the backend to disassociate the user from the band using fetch
-    //             fetch('/api/deletebands', {
-    //                 method: 'DELETE',
-    //                 headers: {
-    //                     'Content-Type': 'application/json',
-    //                 },
-    //                 body: JSON.stringify({ bandId }),
-    //             });
-    //             return prevBandData.filter((band) => band._id !== bandId);
-    //         }
-    //         return prevBandData;
-    //     });
-    // };
-
-
     const handleSelectRow = (bandId) => {
         console.log('bandId of selected row is : ', bandId);
         if (session) {
@@ -147,26 +124,24 @@ export default function DeleteFrequencyBands() {
         if (bandsToDelete.length > 0) {
             try {
                 console.log('inside try block of deleting bands');
-                // const response = await fetch('/api/deletebands', {
-                //     method: 'DELETE',
-                //     headers: {
-                //         'Content-Type': 'application/json',
-                //     },
-                //     body: JSON.stringify(bandsToDelete),
-                // });
-
                 const response = await fetch(`/api/deletebands?bandIds=${bandsToDelete.join(',')}`, {
                     method: 'DELETE',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                 });
+
+                setBandData((prevBandData) => {
+                    return prevBandData.filter((band) => !bandsToDelete.includes(band._id));
+                });
+                
+                setBandsToDelete([]); 
                 
             if (response.ok) {
                 // Success: Status code is in the range 200-299
                 const data = await response.json();
                 console.log('Deletion response:', data);
-                setBandsToDelete([]); // Clear the selected bands
+              // Clear the selected bands
             } else {
                 // Handle errors
                 console.error('Error deleting bands:', response.statusText);
@@ -186,7 +161,7 @@ export default function DeleteFrequencyBands() {
     const handleFrequencyTypeChange = (event) => {
         const selectedType = event.target.value;
         console.log('selected type is : ', selectedType);
-        setSelectedFrequencyType(frequencyTypeLabels[selectedType]);
+        setSelectedFrequencyType(frequencyTypeLabels[selectedType] || '');
     };
 
 
