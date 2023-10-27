@@ -6,15 +6,17 @@ export async function DELETE(req) {
 
     try {
         // Delete all user-band associations with the specified bandId
-        const { bandId } = await req.json();
-        console.log(bandId);
+        const url = new URL(req.url);
+    const searchParams = url.searchParams;
+    const bandIds = searchParams.get('bandIds');
+        console.log('bandIds:', bandIds);
         await connectMongoDB();
-        const deletedAssociation = await UserBand.findOneAndDelete({ bandId });
+        const deletedAssociation = await UserBand.deleteMany({ bandId: { $in: bandIds } });
 
         if (!deletedAssociation) {
             return NextResponse.json({ message: 'User-band not found.' }, { status: 404 });
         } else {
-            return NextResponse.json({ message: 'User unselected the band successfully.' }, { status: 200 });
+            return NextResponse.json({ message: 'User deleted the band successfully.' }, { status: 200 });
         }
     } catch (error) {
         console.error(error);

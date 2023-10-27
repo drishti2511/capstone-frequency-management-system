@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import Button from '@mui/material/Button';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -35,6 +36,7 @@ export default function DeleteFrequencyBands() {
     const [selectedFrequencyType, setSelectedFrequencyType] = useState('');
     const [selectedRows, setSelectedRows] = useState([]);
     const [bandData, setBandData] = useState([]); // Initialize with an empty array
+    const [bandsToDelete,setBandsToDelete] = useState([]);
     const { data: session } = useSession();
 
     useEffect(() => {
@@ -83,31 +85,103 @@ export default function DeleteFrequencyBands() {
         fetchData2();
     }, [bands]);
 
-    console.log('band data : ',bandData);
+    console.log('band data : ', bandData);
 
-    const handleSelectRow = async (bandId) => {
-        console.log('session value');
-        console.log(session);
-        setBandData((prevBandData) => {
-            if (!Array.isArray(prevBandData)) {
-                prevBandData = [];
+    // const handleSelectRow = async (bandId) => {
+    //     console.log('session value');
+    //     console.log(session);
+    //     setBandData((prevBandData) => {
+    //         if (!Array.isArray(prevBandData)) {
+    //             prevBandData = [];
+    //         }
+    //         if (Array.isArray(prevBandData) && prevBandData.some((band) => band._id === bandId)) {
+    //             // Send a DELETE request to the backend to disassociate the user from the band using fetch
+    //             fetch('/api/deletebands', {
+    //                 method: 'DELETE',
+    //                 headers: {
+    //                     'Content-Type': 'application/json',
+    //                 },
+    //                 body: JSON.stringify({ bandId }),
+    //             });
+    //             return prevBandData.filter((band) => band._id !== bandId);
+    //         }
+    //         return prevBandData;
+    //     });
+    // };
+
+
+    const handleSelectRow = (bandId) => {
+        console.log('bandId of selected row is : ', bandId);
+        if (session) {
+            try {
+                if (!Array.isArray(bandsToDelete)) {
+                    setBandsToDelete([]);
+                }
+                if (bandsToDelete.includes(bandId)) {
+                    const index = bandsToDelete.indexOf(bandId);
+                    if (index !== -1) {
+                        bandsToDelete.splice(index, 1);
+                    }
+                } else {
+
+                    bandsToDelete.push(bandId);
+                }
+                setBandsToDelete([...bandsToDelete]);
+
+            } catch (error) {
+                console.error(error);
             }
-            if (Array.isArray(prevBandData) && prevBandData.some((band) => band._id === bandId)) {
-                // Send a DELETE request to the backend to disassociate the user from the band using fetch
-                fetch('/api/deletebands', {
+        }
+        console.log('bands selected for deletion are : ', bandsToDelete);
+    };
+ 
+
+    
+
+
+    const handleSubmit = async () => {
+        console.log('session : ',session);
+        const tempBands = bandsToDelete;
+        console.log('stringified bands : ',JSON.stringify(tempBands));
+        console.log('bandsToDelete.length : ',bandsToDelete.length);
+        if (bandsToDelete.length > 0) {
+            try {
+                console.log('inside try block of deleting bands');
+                // const response = await fetch('/api/deletebands', {
+                //     method: 'DELETE',
+                //     headers: {
+                //         'Content-Type': 'application/json',
+                //     },
+                //     body: JSON.stringify(bandsToDelete),
+                // });
+
+                const response = await fetch(`/api/deletebands?bandIds=${bandsToDelete.join(',')}`, {
                     method: 'DELETE',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ bandId }),
                 });
-                return prevBandData.filter((band) => band._id !== bandId);
+                
+            if (response.ok) {
+                // Success: Status code is in the range 200-299
+                const data = await response.json();
+                console.log('Deletion response:', data);
+                setBandsToDelete([]); // Clear the selected bands
+            } else {
+                // Handle errors
+                console.error('Error deleting bands:', response.statusText);
             }
-            return prevBandData;
-        });
+
+        } catch (error) {
+            console.error('Error deleting bands:', error);
+        }
+            }
+           
     };
 
-    const isRowSelected = (bandId) => Array.isArray(selectedRows) && selectedRows.includes(bandId);
+
+
+    const isRowSelected = (bandId) => Array.isArray(bandsToDelete) && bandsToDelete.includes(bandId);
 
     const handleFrequencyTypeChange = (event) => {
         const selectedType = event.target.value;
@@ -121,7 +195,7 @@ export default function DeleteFrequencyBands() {
         ? bandData.filter((band) => band.frequency_type === selectedFrequencyType)
         : bandData;
 
-    
+
 
     return (
         <div>
@@ -176,6 +250,10 @@ export default function DeleteFrequencyBands() {
                     </TableBody>
                 </Table>
             </TableContainer>
+            {/* <Box mt={2} display="flex" justifyContent="center">
+                <button onClick={handleSubmit}>Submit</button>
+            </Box> */}
+            <Button onClick={handleSubmit} size="small" sx={{ margin: '80px auto 0', display: 'block' }}>Delete Bands</Button>
         </div>
     );
 }
