@@ -2,6 +2,7 @@
 import React, { use, useEffect, useState } from 'react';
 import { Container, Grid, Typography, TextField, Button, Paper } from '@mui/material';
 const axios = require('axios');
+import { useSession } from 'next-auth/react';
 import { styled } from '@mui/system';
 
 // const TextField = withStyles(styles)(TextField);
@@ -9,9 +10,10 @@ import { styled } from '@mui/system';
 
 const Profile = () => {
     const [userData, setUserData] = useState(null);
-    //   console.log(email);
+    const { data: session } = useSession();
     useEffect(() => {
         const email = localStorage.getItem('email');
+        // const email = session.user.email;
         const loadUserProfile = async (email) => {
             console.log('email obtained from local storage');
             console.log(email);

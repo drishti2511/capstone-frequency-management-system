@@ -7,9 +7,6 @@ import {authOptions} from '/Users/sanjayjain/Desktop/frequency-management-system
 
 export default async function Signup(){
     const session = await getServerSession(authOptions);
-    if(session){
-        redirect('/dashboard');
-    }
     return (
            <SignupForm/>
     );

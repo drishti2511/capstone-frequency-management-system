@@ -40,6 +40,7 @@ const defaultTheme = createTheme();
 
 export default function AuthHome() {
     const router = useRouter();
+   
     return (
         <ThemeProvider theme={defaultTheme}>
             <CssBaseline />

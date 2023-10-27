@@ -1,9 +1,9 @@
 // src/LoginForm.js
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TextField, Button, Paper, Typography, Container, CssBaseline } from '@mui/material';
 import Link from 'next/link';
-import { signIn } from 'next-auth/react'
+import { signIn,useSession } from 'next-auth/react'
 import { useRouter } from "next/navigation";
 import Image from 'next/image'
 
@@ -12,11 +12,9 @@ const LoginForm = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const router = useRouter();
+  const { data: session } = useSession();
 
-  async function handleGoogleSignin() {
-    signIn('google', { callbackUrl: "http://localhost:3000" })
-  }
-
+ 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -38,6 +36,25 @@ const LoginForm = () => {
       console.log(error);
     }
   };
+
+
+  const handleGoogleSignin = async () => {
+    const result = await signIn('google')
+    if (result?.error) {
+      console.error('Google sign-in error:', result.error);
+    }
+  };
+
+  useEffect(() => {
+    if (session && session.user) {
+      localStorage.setItem('email', session.user.email);
+      router.push("authhome");
+    }
+  }, [session]);
+
+  
+
+
 
   return (
     <Container component="main" maxWidth="xs">

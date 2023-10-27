@@ -18,11 +18,13 @@ const Navbar = () => {
 
   const [userData, setUserData] = useState(null);
   const router = useRouter();
-  const { data: session } = useSession();
+  // const { data: session } = useSession();
 
   //   console.log(email);
   useEffect(() => {
-    const email = localStorage.getItem('email');
+    // console.log('session : ',session.user.email);
+    const email = localStorage.getItem('email') ;
+    console.log(email);
     const loadUserProfile = async (email) => {
       console.log('email obtained from local storage');
       console.log(email);
