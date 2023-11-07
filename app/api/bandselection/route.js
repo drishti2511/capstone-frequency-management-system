@@ -20,7 +20,7 @@ export async function PUT(req) {
         const bandIdObjectId = new mongoose.Types.ObjectId(bandId);
         await connectMongoDB();
         const existingFreqBand = await freqBand.findOne({_id: bandIdObjectId });
-        console.log(userId,location);
+        // console.log(userId,location);
         existingFreqBand.user_email = userId;
         existingFreqBand.user_location = location;
         console.log('updated user location is : ',existingFreqBand.user_loaction );
@@ -64,7 +64,7 @@ export async function GET(req) {
       await connectMongoDB();
       const userBands = await freqBand.find({ user_email: { $ne: null } }).select('_id');
       const userBandIds = userBands.map((userBand) => userBand._id.toString());
-      console.log('userbands which are occupied : ', userBandIds);
+      // console.log('userbands which are occupied : ', userBandIds);
       return NextResponse.json(userBandIds, { status: 200 });
 
     } catch (error) {

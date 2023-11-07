@@ -46,8 +46,8 @@ const AddFreq = () => {
                 const frequencyBand = {
                     frequency_type: frequencyType,
                     frequency_channel: freq, // Assuming the frequency channel field represents the actual frequency
-                    user_email: '', // You can fill in these fields with appropriate values
-                    user_location: '',
+                    user_email: null, // You can fill in these fields with appropriate values
+                    user_location: null,
                     power,
                 };
                 frequencyBands.push(frequencyBand);

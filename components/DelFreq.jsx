@@ -124,11 +124,15 @@ export default function DeleteFrequencyBands() {
         if (bandsToDelete.length > 0) {
             try {
                 console.log('inside try block of deleting bands');
-                const response = await fetch(`/api/deletebands?bandIds=${bandsToDelete.join(',')}`, {
+                // const response = await fetch(`/api/deletebands?bandIds=${bandsToDelete.join(',')}`, {
+                const response = await fetch(`/api/deletebands`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
                     },
+                    body: JSON.stringify({
+                        bandsToDelete
+                    }),
                 });
 
                 setBands((prevBands) => {
@@ -138,12 +142,9 @@ export default function DeleteFrequencyBands() {
                 setBandsToDelete([]); 
                 
             if (response.ok) {
-                // Success: Status code is in the range 200-299
                 const data = await response.json();
                 console.log('Deletion response:', data);
-              // Clear the selected bands
             } else {
-                // Handle errors
                 console.error('Error deleting bands:', response.statusText);
             }
 
