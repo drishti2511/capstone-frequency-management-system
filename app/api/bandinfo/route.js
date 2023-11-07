@@ -1,5 +1,5 @@
 import { connectMongoDB } from '@/lib/mongodb'; // Adjust the import as needed
-import freqBand from '@/models/freqBand'; // Adjust the import as needed
+import freqBand from '@/models/freqband'; // Adjust the import as needed
 import { NextResponse } from "next/server";
 import mongoose from 'mongoose';
 

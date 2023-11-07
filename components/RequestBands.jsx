@@ -17,6 +17,7 @@ import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox'; // Import Checkbox
 import { useSession } from 'next-auth/react';
 
+
 // Define the frequency type labels
 const frequencyTypeLabels = {
     '1': 'VHF',
@@ -67,7 +68,9 @@ export default function FrequencyBands() {
             try {
                 const response = await axios.get('/api/bandselection');
                 console.log('resposne obtained about already used bands',response);
-                const bandIds = response.data.map((item) => item.bandId);
+                // const bandIds = response.data.map((item) => item.bandId);
+                const bandIds  = response.data;
+                console.log(bandIds);
                 setOverallSelectedBands(bandIds);
             } catch (error) {
                 console.error(error);
@@ -80,39 +83,40 @@ export default function FrequencyBands() {
     const handleSelectRow = async (bandId) => {
         if (session) {
             const currentUserId = session.user.email;
+            const location = 'temporary_location';
             const userId = currentUserId;
             console.log('session value');
             console.log(session);
             try {
-                if (selectedRows.includes(bandId)) {
-                    // If the bandId is already in the array, remove it
-                    const index = selectedRows.indexOf(bandId);
-                    if (index !== -1) {
-                        selectedRows.splice(index, 1);
-                    }
-    
-                    await fetch('/api/bandselection', {
-                        method: 'DELETE',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ userId, bandId }),
-                    });
-                } else {
+                // if (selectedRows.includes(bandId)) {
+                //     // If the bandId is already in the array, remove it
+                //     const index = selectedRows.indexOf(bandId);
+                //     if (index !== -1) {
+                //         selectedRows.splice(index, 1);
+                //     }
+                //     const newuserId = null;
+                //     const newlocation = null;
+                //     await fetch('/api/bandselection', {
+                //         method: 'PUT',
+                //         headers: {
+                //             'Content-Type': 'application/json',
+                //         },
+                //         body: JSON.stringify({bandId, newuserId, newlocation}),
+                //     });
+                // } else {
                     console.log('user_id=', currentUserId);
                     console.log('band_id=', bandId);
                     console.log('posting request');
-    
                     await fetch(`/api/bandselection`, {
-                        method: 'POST',
+                        method: 'PUT',
                         headers: {
                             'Content-Type': 'application/json',
                         },
-                        body: JSON.stringify({ userId, bandId }),
+                        body: JSON.stringify({ bandId, userId, location }),
                     });
     
                     selectedRows.push(bandId);
-                }
+                // }
     
                 setSelectedRows([...selectedRows]);
             } catch (error) {
@@ -179,11 +183,11 @@ export default function FrequencyBands() {
                     <TableHead>
                         <TableRow>
 
-                            <TableCell>Frequency Type</TableCell>
-                            <TableCell>Frequency From</TableCell>
-                            <TableCell>Frequency To</TableCell>
-                            <TableCell>Channel Spacing</TableCell>
-                            <TableCell>Select Band</TableCell>
+                            <TableCell>Band</TableCell>
+                            <TableCell>Frequency (Mhz)</TableCell>
+                            <TableCell>User</TableCell>
+                            <TableCell>User Location</TableCell>
+                            <TableCell>Power (W)</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -197,9 +201,10 @@ export default function FrequencyBands() {
                                 }
                             >
                                 <TableCell>{band.frequency_type}</TableCell>
-                                <TableCell>{band.frequency_fm}</TableCell>
-                                <TableCell>{band.frequency_to}</TableCell>
-                                <TableCell>{band.channel_spacing}</TableCell>
+                                <TableCell>{band.frequency_channel}</TableCell>
+                                <TableCell>{band.user_email || '-'}</TableCell>
+                                <TableCell>{band.user_location || '-'}</TableCell>
+                                <TableCell>{band.power}</TableCell>
                                 <TableCell>
                                     <Checkbox
                                         checked={isRowSelected(band._id)}

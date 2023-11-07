@@ -6,18 +6,22 @@ const freqBandSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
-        frequency_to: {
+        frequency_channel: {
             type: String,
             required: true,
         },
-        frequency_fm: {
+        user_email :{
+            type: String,
+            required: false,
+        },
+        user_location :{
+            type: String,
+            required: false, 
+        },
+        power : {
             type: String,
             required: true,
-        },
-        channel_spacing: {
-            type: String,
-            required: true,
-        },
+        }
     },
     { timestamps: true }
 );

@@ -9,6 +9,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
+
 const AddFreq = () => {
     const [frequency_to, setFrequency_to] = useState('');
     const [frequency_fm, setFrequency_fm] = useState('');
@@ -32,10 +33,38 @@ const AddFreq = () => {
         setfrequency_type(e.target.value);
     };
 
+   
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        console.log('inside handle submit function');
+
+        function calculateFrequencyBands(fromFrequency, to, spacing, frequencyType, power) {
+            const frequencyBands = [];
+            for (let freq = fromFrequency; freq <= to; freq += spacing) {
+                const frequencyBand = {
+                    frequency_type: frequencyType,
+                    frequency_channel: freq, // Assuming the frequency channel field represents the actual frequency
+                    user_email: '', // You can fill in these fields with appropriate values
+                    user_location: '',
+                    power,
+                };
+                frequencyBands.push(frequencyBand);
+            }
+            return frequencyBands;
+        }
+
         try {
+            console.log('Starting to calculate frequency bands...');
+
+            const fromFrequency = parseFloat(frequency_fm);
+            const toFrequency = parseFloat(frequency_to);
+            const spacing = parseFloat(channel_spacing);
+            const power = 1;
+            const frequencyBands = calculateFrequencyBands(fromFrequency, toFrequency, spacing, frequency_type, power);
+            console.log('displaying frequency bands to be added');
+            console.log(frequencyBands);
 
             const res = await fetch("api/addfreq", {
                 method: "POST",
@@ -43,19 +72,15 @@ const AddFreq = () => {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    frequency_type,
-                    frequency_to,
-                    frequency_fm,
-                    channel_spacing,
+                    frequencyBands
                 }),
             });
             console.log('checking res.ok');
             console.log(res.ok);
             if (res.ok) {
-                console.log('pushing in addfreq to the router-1');
+                
                 const form = e.target;
                 form.reset();
-                console.log('pushing in addfreq to the router-2');
                 router.push("addfreq");
             } else {
                 console.log("Adding frequency band failed.");
@@ -93,16 +118,6 @@ const AddFreq = () => {
                         </FormControl>
                     </Box>
                     <TextField
-                        label="Frequency To (MHz)"
-                        variant="outlined"
-                        fullWidth
-                        margin="normal"
-                        type="Text"
-                        value={frequency_to}
-                        onChange={(e) => setFrequency_to(e.target.value)}
-                        required
-                    />
-                    <TextField
                         label="Frequency From (MHz)"
                         variant="outlined"
                         fullWidth
@@ -112,6 +127,17 @@ const AddFreq = () => {
                         onChange={(e) => setFrequency_fm(e.target.value)}
                         required
                     />
+                    <TextField
+                        label="Frequency To (MHz)"
+                        variant="outlined"
+                        fullWidth
+                        margin="normal"
+                        type="Text"
+                        value={frequency_to}
+                        onChange={(e) => setFrequency_to(e.target.value)}
+                        required
+                    />
+                    
                     <TextField
                         label="Channel Spacing (Mhz)"
                         variant="outlined"

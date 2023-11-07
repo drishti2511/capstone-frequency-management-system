@@ -11,12 +11,7 @@ import dynamic from 'next/dynamic';
 // const DynamicNavbar = dynamic(() => import('../components/Navbar'), { ssr: false });
 
 export default async function Home() {
-  const session = await getServerSession(authOptions);
   
-  if(session)
-  {
-    redirect('/dashboard');
-  }
   return (
     <main>
       {/* <DynamicNavbar/> */}

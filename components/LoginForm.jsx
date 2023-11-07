@@ -50,7 +50,7 @@ const LoginForm = () => {
       localStorage.setItem('email', session.user.email);
       router.push("authhome");
     }
-  }, [session]);
+  }, [session, router]);
 
   
 
@@ -97,7 +97,7 @@ const LoginForm = () => {
             }
             <div style={{ marginTop: '20px' }}>
               <Link href="/signup" style={{ marginTop: '4px', textDecoration: 'none', color: 'inherit' }}>
-                Don't have an account? <span style={{ borderBottom: '1px solid black', cursor: 'pointer',color: 'inherit' }}>Signup here</span>.
+                Do not have an account? <span style={{ borderBottom: '1px solid black', cursor: 'pointer',color: 'inherit' }}>Signup here</span>.
               </Link>
             </div>
           </form>
