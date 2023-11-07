@@ -4,7 +4,6 @@ const app = express();
 import freqBand from "@/models/freqband";
 const mongoose = require('mongoose');
 
-
 // Use the built-in express.json() middleware to parse JSON data
 app.use(express.json());
 

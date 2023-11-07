@@ -61,8 +61,6 @@ export default function FrequencyBands() {
     }, []);
 
 
-
-
     useEffect(() => {
         async function fetchData() {
             try {

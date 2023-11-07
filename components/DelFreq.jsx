@@ -39,6 +39,7 @@ export default function DeleteFrequencyBands() {
     const [bandsToDelete,setBandsToDelete] = useState([]);
     const { data: session } = useSession();
 
+
     useEffect(() => {
         async function fetchData() {
             try {
@@ -58,34 +59,33 @@ export default function DeleteFrequencyBands() {
 
     console.log('bands to del: ', bands);
 
-    useEffect(() => {
-        async function fetchData2() {
-            const bandDataArray = [];
-            for (const bandId of bands) {
-                try {
-                    const response = await axios.get(`/api/bandinfo?bandId=${bandId.bandId}`);
-                    console.log('response obtained is: ');
-                    console.log(response.data);
+    // useEffect(() => {
+    //     async function fetchData2() {
+    //         const bandDataArray = [];
+    //         for (const bandId of bands) {
+    //             try {
+    //                 const response = await axios.get(`/api/bandinfo?bandId=${bandId.bandId}`);
+    //                 console.log('response obtained is: ');
+    //                 console.log(response.data);
 
-                    const bandWithLabel = {
-                        ...response.data,
-                        frequency_type: frequencyTypeLabels[response.data.frequency_type],
-                    };
+    //                 const bandWithLabel = {
+    //                     ...response.data,
+    //                     frequency_type: frequencyTypeLabels[response.data.frequency_type],
+    //                 };
 
-                    // console.log('band with label is: ', bandWithLabel);
-                    bandDataArray.push(bandWithLabel);
-                } catch (error) {
-                    console.error(`Error fetching data for band ID ${bandId.bandId}:`, error);
-                }
-            }
+    //                 // console.log('band with label is: ', bandWithLabel);
+    //                 bandDataArray.push(bandWithLabel);
+    //             } catch (error) {
+    //                 console.error(`Error fetching data for band ID ${bandId.bandId}:`, error);
+    //             }
+    //         }
 
-            setBandData(bandDataArray);
-        }
+    //         setBandData(bandDataArray);
+    //     }
 
-        fetchData2();
-    }, [bands]);
+    //     fetchData2();
+    // }, [bands]);
 
-    console.log('band data : ', bandData);
 
     const handleSelectRow = (bandId) => {
         console.log('bandId of selected row is : ', bandId);
@@ -125,14 +125,14 @@ export default function DeleteFrequencyBands() {
             try {
                 console.log('inside try block of deleting bands');
                 const response = await fetch(`/api/deletebands?bandIds=${bandsToDelete.join(',')}`, {
-                    method: 'DELETE',
+                    method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                 });
 
-                setBandData((prevBandData) => {
-                    return prevBandData.filter((band) => !bandsToDelete.includes(band._id));
+                setBands((prevBands) => {
+                    return prevBands.filter((band) => !bandsToDelete.includes(band._id));
                 });
                 
                 setBandsToDelete([]); 
@@ -167,8 +167,8 @@ export default function DeleteFrequencyBands() {
 
 
     const filteredBands = selectedFrequencyType
-        ? bandData.filter((band) => band.frequency_type === selectedFrequencyType)
-        : bandData;
+        ? bands.filter((band) => band.frequency_type === selectedFrequencyType)
+        : bands;
 
 
 
@@ -200,20 +200,21 @@ export default function DeleteFrequencyBands() {
                 <Table>
                     <TableHead>
                         <TableRow>
-                            <TableCell>Frequency Type</TableCell>
-                            <TableCell>Frequency From</TableCell>
-                            <TableCell>Frequency To</TableCell>
-                            <TableCell>Channel Spacing</TableCell>
-                            <TableCell>Select Band</TableCell>
+                           <TableCell>Band</TableCell>
+                            <TableCell>Frequency (Mhz)</TableCell>
+                            <TableCell>User</TableCell>
+                            <TableCell>User Location</TableCell>
+                            <TableCell>Power (W)</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {filteredBands.map((band) => (
                             <TableRow key={band._id}>
                                 <TableCell>{band.frequency_type}</TableCell>
-                                <TableCell>{band.frequency_fm}</TableCell>
-                                <TableCell>{band.frequency_to}</TableCell>
-                                <TableCell>{band.channel_spacing}</TableCell>
+                                <TableCell>{band.frequency_channel}</TableCell>
+                                <TableCell>{band.user_email || '-'}</TableCell>
+                                <TableCell>{band.user_location || '-'}</TableCell>
+                                <TableCell>{band.power}</TableCell>
                                 <TableCell>
                                     <Checkbox
                                         checked={isRowSelected(band._id)}
