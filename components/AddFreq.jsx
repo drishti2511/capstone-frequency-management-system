@@ -33,10 +33,11 @@ const AddFreq = () => {
         setfrequency_type(e.target.value);
     };
 
-   
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
 
         console.log('inside handle submit function');
 
@@ -57,10 +58,28 @@ const AddFreq = () => {
 
         try {
             console.log('Starting to calculate frequency bands...');
+            console.log('frequency_type :', frequency_type);
 
+            if (frequency_type === '1') {
+                setChannel_spacing('0.025');
+            }
+            else if (frequency_type === '2') {
+                setChannel_spacing('0.010');
+            }
+            else if (frequency_type === '3') {
+                setChannel_spacing('0.025');
+            }
+            else if (frequency_type === '4') {
+                setChannel_spacing('0.125');
+            }
+            else if (frequency_type === '5') {
+                setChannel_spacing('0.125');
+            }
+            console.log('channel_spacing :', channel_spacing);
             const fromFrequency = parseFloat(frequency_fm);
             const toFrequency = parseFloat(frequency_to);
             const spacing = parseFloat(channel_spacing);
+            console.log('spacing :', spacing);
             const power = 1;
             const frequencyBands = calculateFrequencyBands(fromFrequency, toFrequency, spacing, frequency_type, power);
             console.log('displaying frequency bands to be added');
@@ -78,7 +97,7 @@ const AddFreq = () => {
             console.log('checking res.ok');
             console.log(res.ok);
             if (res.ok) {
-                
+
                 const form = e.target;
                 form.reset();
                 router.push("addfreq");
@@ -137,8 +156,8 @@ const AddFreq = () => {
                         onChange={(e) => setFrequency_to(e.target.value)}
                         required
                     />
-                    
-                    <TextField
+
+                    {/* <TextField
                         label="Channel Spacing (Mhz)"
                         variant="outlined"
                         fullWidth
@@ -147,7 +166,7 @@ const AddFreq = () => {
                         value={channel_spacing}
                         onChange={(e) => setChannel_spacing(e.target.value)}
                         required
-                    />
+                    /> */}
                     <Button type="submit" variant="contained" color="primary" fullWidth style={{ marginTop: 20 }}>
                         Add frequency Band
                     </Button>

@@ -86,7 +86,7 @@ export default function FrequencyBands() {
         try {
             const availableBands = bands.filter((band) => {
                 const bandFrequency = parseFloat(band.frequency_channel);
-                return bandFrequency >= fromFrequency && bandFrequency <= toFrequency;
+                return bandFrequency >= fromFrequency && bandFrequency <= toFrequency &&  band.frequency_type === selectedFrequencyType;
             });
     
             const filteredBands = availableBands.filter((band) => {
