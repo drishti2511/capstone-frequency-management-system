@@ -10,6 +10,8 @@ import { styled } from '@mui/system';
 
 const Profile = () => {
     const [userData, setUserData] = useState(null);
+    const [latitude1,setLatitude1] = useState('');
+    const [longitude1,setLongitude1] = useState('');
     const { data: session } = useSession();
     useEffect(() => {
         const email = localStorage.getItem('email');
@@ -23,6 +25,17 @@ const Profile = () => {
                     'Accept': 'application/json'
                 }
             };
+
+            const position = await new Promise((resolve, reject) => {
+                navigator.geolocation.getCurrentPosition(resolve, reject);
+              });
+              const { latitude, longitude } = position.coords;
+              setLatitude1(latitude);
+              setLongitude1(longitude);
+              console.log('latitude :',latitude);
+              console.log('longitude :',longitude);
+        
+
             try {
                 console.log('inside-loaduserprof-temp');
                 console.log(email);
@@ -104,7 +117,14 @@ const Profile = () => {
                         disabled
                     />
                     <TextField
-                        label="Location"
+                        label="Latitude"
+                        variant="filled"
+                        fullWidth
+                        margin="normal"
+                        disabled
+                    />
+                    <TextField
+                        label="Longitude"
                         variant="filled"
                         fullWidth
                         margin="normal"
@@ -167,7 +187,16 @@ const Profile = () => {
                                 variant="outlined"
                                 fullWidth
                                 margin="normal"
-                                value={userData.location}
+                                value={latitude1}
+                                style={{color:'red'}}
+                                // disabled
+                            />
+                             <TextField
+                                // label="Location"
+                                variant="outlined"
+                                fullWidth
+                                margin="normal"
+                                value={longitude1}
                                 style={{color:'red'}}
                                 // disabled
                             />

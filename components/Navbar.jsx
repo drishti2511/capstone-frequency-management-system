@@ -97,10 +97,10 @@ const Navbar = () => {
           <AccountCircleIcon />
         </IconButton>
 
-
+{/* 
         <IconButton color="inherit">
           <LocationOnIcon />
-        </IconButton>
+        </IconButton> */}
 
         <IconButton color="inherit" onClick={handleGoToHomePage}>
           <HomeIcon />
