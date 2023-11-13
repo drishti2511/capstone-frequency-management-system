@@ -39,6 +39,7 @@ export default function FrequencyBands() {
 
     const [bands, setBands] = useState([]);
     const [selectedFrequencyType, setSelectedFrequencyType] = useState('');
+    const [selectedFrequencyTypeDisplay, setSelectedFrequencyTypeDisplay] = useState('');
     const [selectedRows, setSelectedRows] = useState([]); // State to store selected rows
     const [overallSelectedBands, setOverallSelectedBands] = useState([]);
     const { data: session } = useSession();
@@ -185,6 +186,7 @@ export default function FrequencyBands() {
 
     const handleFrequencyTypeChange = (event) => {
         const selectedType = event.target.value;
+        setSelectedFrequencyTypeDisplay(selectedType);
         setSelectedFrequencyType(frequencyTypeLabels[selectedType]);
     };
 
@@ -202,12 +204,12 @@ export default function FrequencyBands() {
             <Box display="flex" justifyContent="center" alignItems="center" mt={2}>
                 <Typography variant="h3">Frequency Bands Available</Typography>
             </Box>
-            <FormControl variant="standard" sx={{ m: 1, minWidth: 240 }}>
+            <FormControl sx={{ m: 1, minWidth: 240 }}>
                 <InputLabel id="demo-simple-select-standard-label">Select Frequency Type</InputLabel>
                 <Select
-                    labelId="demo-simple-select-standard-label"
-                    id="demo-simple-select-standard"
-                    value={selectedFrequencyType}
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={selectedFrequencyTypeDisplay}
                     onChange={handleFrequencyTypeChange}
                     label="Select Frequency Type"
                 >
