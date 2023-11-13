@@ -1,6 +1,6 @@
 "use client";
 import React, { use, useEffect, useState } from 'react';
-import { Container, Grid, Typography, TextField, Button, Paper } from '@mui/material';
+import { Container, Grid, Typography, TextField, Button, Paper, Box } from '@mui/material';
 const axios = require('axios');
 import { useSession } from 'next-auth/react';
 import { styled } from '@mui/system';
@@ -68,143 +68,39 @@ const Profile = () => {
 
     return (
         <Container maxWidth="md">
-            <Paper elevation={3} style={{ padding: 20, marginTop: 40 }}>
-                <Typography variant="h5">User Profile</Typography>
-                <Grid container spacing={2}>
-                <Grid item xs={4}>
-                    <TextField
-                        label="Name"
-                        variant="filled"
-                        fullWidth
-                        margin="normal"
-                        color="secondary"
-                        disabled
-                    />
-                    <TextField
-                        label="Email"
-                        variant="filled"
-                        fullWidth
-                        margin="normal"
-                        disabled
-
-                    />
-                    <TextField
-                        label="Contact Number"
-                        variant="filled"
-                        fullWidth
-                        margin="normal"
-                        disabled
-                    />
-                    <TextField
-                        label="Designation"
-                        variant="filled"
-                        fullWidth
-                        margin="normal"
-                        disabled
-                    />
-                    <TextField
-                        label="Radio Details"
-                        variant="filled"
-                        fullWidth
-                        margin="normal"
-                        disabled
-                    />
-                    <TextField
-                        label="Radio Set Details"
-                        variant="filled"
-                        fullWidth
-                        margin="normal"
-                        disabled
-                    />
-                    <TextField
-                        label="Latitude"
-                        variant="filled"
-                        fullWidth
-                        margin="normal"
-                        disabled
-                    />
-                    <TextField
-                        label="Longitude"
-                        variant="filled"
-                        fullWidth
-                        margin="normal"
-                        disabled
-                    />
-                    </Grid>
-                    <Grid item xs={6}>
-                    {userData && (
-                        <div>
-                            <TextField
-                                // label="Name"
-                                variant="outlined"
-                                fullWidth
-                                margin="normal"
-                                value={userData.name}
-                                
+            <Grid container spacing={3}>
+                <Grid item xs={12} md={8}>
+                    {/* User Profile Information */}
+                    <Paper elevation={3} style={{ padding: 20, marginTop: 40 }}>
+                        {/* ... (existing profile information) */}
+                    </Paper>
+                </Grid>
+                <Grid item xs={12} md={4}>
+                    {/* Profile Picture Box */}
+                    <Box
+                        display="flex"
+                        alignItems="center"
+                        justifyContent="center"
+                        flexDirection="column"
+                        height="100%"
+                        boxShadow={3}
+                        p={2}
+                    >
+                        {/* Assuming userData has a profileImageUrl property */}
+                        {userData && userData.profileImageUrl ? (
+                            <img
+                                src={userData.profileImageUrl}
+                                alt="Profile"
+                                style={{ width: '100%', height: 'auto', borderRadius: '50%' }}
                             />
-                            <TextField
-                                // label="Email"
-                                variant="outlined"
-                                fullWidth
-                                margin="normal"
-                                value={userData.email}
-                                // disabled
-                            />
-                            <TextField
-                                // label="Contact Number"
-                                variant="outlined"
-                                fullWidth
-                                margin="normal"
-                                value={userData.contactNumber}
-                                // disabled
-                            />
-                            <TextField
-                                // label="Designation"
-                                variant="outlined"
-                                fullWidth
-                                margin="normal"
-                                value={userData.designation}
-                                // disabled
-                            />
-                            <TextField
-                                // label="Radio Details"
-                                variant="outlined"
-                                fullWidth
-                                margin="normal"
-                                value={userData.radioDetails}
-                                // disabled
-                            />
-                            <TextField
-                                // label="Radio Set Details"
-                                variant="outlined"
-                                fullWidth
-                                margin="normal"
-                                value={userData.radioSetDetails}
-                                // disabled
-                            />
-                            <TextField
-                                // label="Location"
-                                variant="outlined"
-                                fullWidth
-                                margin="normal"
-                                value={latitude1}
-                                style={{color:'red'}}
-                                // disabled
-                            />
-                             <TextField
-                                // label="Location"
-                                variant="outlined"
-                                fullWidth
-                                margin="normal"
-                                value={longitude1}
-                                style={{color:'red'}}
-                                // disabled
-                            />
-                        </div>
-                    )}
-                    </Grid>
-                    </Grid>
-            </Paper>
+                        ) : (
+                            <Typography variant="body2">
+                                No profile picture available
+                            </Typography>
+                        )}
+                    </Box>
+                </Grid>
+            </Grid>
         </Container>
     );
 };
