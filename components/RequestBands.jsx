@@ -127,22 +127,24 @@ export default function FrequencyBands() {
 
                 const position = await new Promise((resolve, reject) => {
                     navigator.geolocation.getCurrentPosition(resolve, reject);
-                  });
-                  const { latitude, longitude } = position.coords;
-                  console.log('latitude :',latitude);
-                  console.log('longitude :',longitude);
-                  setLocation({ latitude, longitude });
+                });
+                const { latitude, longitude } = position.coords;
+                console.log('latitude :', latitude);
+                console.log('longitude :', longitude);
+                setLocation({ latitude, longitude });
                 // console.log('location is :',position.coords );
                 await fetch(`/api/bandselection`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ bandId, userId, latitude,longitude }),
+                    body: JSON.stringify({ bandId, userId, latitude, longitude }),
                 });
 
                 selectedRows.push(bandId);
                 setSelectedRows([...selectedRows]);
+                // Refresh the page after selecting the band
+                window.location.reload();
 
             } catch (error) {
                 console.error(error);
