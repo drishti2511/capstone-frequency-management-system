@@ -23,7 +23,8 @@ export async function PUT(req) {
           const existingFreqBand = await freqBand.findOne({_id: bandId });
           console.log('existingFreqBand :',existingFreqBand);
           existingFreqBand.user_email = null;
-          existingFreqBand.user_location = null;
+          existingFreqBand.user_latitude = null;
+          existingFreqBand.user_longitude = null;
           console.log('existingFreqBand :',existingFreqBand);
           const updatedFreqBand = await existingFreqBand.save();
         // return NextResponse.json(updatedFreqBand, { status: 200 });

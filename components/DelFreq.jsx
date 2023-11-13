@@ -36,9 +36,9 @@ export default function DeleteFrequencyBands() {
     const [selectedFrequencyType, setSelectedFrequencyType] = useState('');
     const [selectedRows, setSelectedRows] = useState([]);
     const [bandData, setBandData] = useState([]); // Initialize with an empty array
-    const [bandsToDelete,setBandsToDelete] = useState([]);
+    const [bandsToDelete, setBandsToDelete] = useState([]);
     const { data: session } = useSession();
-
+    const [selectAll, setSelectAll] = useState(false);
 
     useEffect(() => {
         async function fetchData() {
@@ -59,33 +59,15 @@ export default function DeleteFrequencyBands() {
 
     console.log('bands to del: ', bands);
 
-    // useEffect(() => {
-    //     async function fetchData2() {
-    //         const bandDataArray = [];
-    //         for (const bandId of bands) {
-    //             try {
-    //                 const response = await axios.get(`/api/bandinfo?bandId=${bandId.bandId}`);
-    //                 console.log('response obtained is: ');
-    //                 console.log(response.data);
-
-    //                 const bandWithLabel = {
-    //                     ...response.data,
-    //                     frequency_type: frequencyTypeLabels[response.data.frequency_type],
-    //                 };
-
-    //                 // console.log('band with label is: ', bandWithLabel);
-    //                 bandDataArray.push(bandWithLabel);
-    //             } catch (error) {
-    //                 console.error(`Error fetching data for band ID ${bandId.bandId}:`, error);
-    //             }
-    //         }
-
-    //         setBandData(bandDataArray);
-    //     }
-
-    //     fetchData2();
-    // }, [bands]);
-
+    const handleSelectAll = () => {
+        if (selectAll) {
+            setBandsToDelete([]);
+        } else {
+            const allBandIds = bands.map((band) => band._id);
+            setBandsToDelete(allBandIds);
+        }
+        setSelectAll(!selectAll);
+    };
 
     const handleSelectRow = (bandId) => {
         console.log('bandId of selected row is : ', bandId);
@@ -111,20 +93,19 @@ export default function DeleteFrequencyBands() {
         }
         console.log('bands selected for deletion are : ', bandsToDelete);
     };
- 
 
-    
+
+
 
 
     const handleSubmit = async () => {
-        console.log('session : ',session);
+        console.log('session : ', session);
         const tempBands = bandsToDelete;
-        console.log('stringified bands : ',JSON.stringify(tempBands));
-        console.log('bandsToDelete.length : ',bandsToDelete.length);
+        console.log('stringified bands : ', JSON.stringify(tempBands));
+        console.log('bandsToDelete.length : ', bandsToDelete.length);
         if (bandsToDelete.length > 0) {
             try {
                 console.log('inside try block of deleting bands');
-                // const response = await fetch(`/api/deletebands?bandIds=${bandsToDelete.join(',')}`, {
                 const response = await fetch(`/api/deletebands`, {
                     method: 'PUT',
                     headers: {
@@ -138,21 +119,21 @@ export default function DeleteFrequencyBands() {
                 setBands((prevBands) => {
                     return prevBands.filter((band) => !bandsToDelete.includes(band._id));
                 });
-                
-                setBandsToDelete([]); 
-                
-            if (response.ok) {
-                const data = await response.json();
-                console.log('Deletion response:', data);
-            } else {
-                console.error('Error deleting bands:', response.statusText);
-            }
 
-        } catch (error) {
-            console.error('Error deleting bands:', error);
-        }
+                setBandsToDelete([]);
+
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('Deletion response:', data);
+                } else {
+                    console.error('Error deleting bands:', response.statusText);
+                }
+
+            } catch (error) {
+                console.error('Error deleting bands:', error);
             }
-           
+        }
+
     };
 
 
@@ -201,11 +182,15 @@ export default function DeleteFrequencyBands() {
                 <Table>
                     <TableHead>
                         <TableRow>
-                           <TableCell>Band</TableCell>
+                            <TableCell>Band</TableCell>
                             <TableCell>Frequency (Mhz)</TableCell>
                             <TableCell>User</TableCell>
-                            <TableCell>User Location</TableCell>
+                            <TableCell>Latitude</TableCell>
+                            <TableCell>Longitude</TableCell>
                             <TableCell>Power (W)</TableCell>
+                            <Button onClick={handleSelectAll} size="small" sx={{ marginRight: '10px', marginTop : '15px' }}>
+                                {selectAll ? 'Deselect All' : 'Select All'}
+                            </Button>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -214,7 +199,8 @@ export default function DeleteFrequencyBands() {
                                 <TableCell>{band.frequency_type}</TableCell>
                                 <TableCell>{band.frequency_channel}</TableCell>
                                 <TableCell>{band.user_email || '-'}</TableCell>
-                                <TableCell>{band.user_location || '-'}</TableCell>
+                                <TableCell>{band.user_latitude || '-'}</TableCell>
+                                <TableCell>{band.user_longitude || '-'}</TableCell>
                                 <TableCell>{band.power}</TableCell>
                                 <TableCell>
                                     <Checkbox
