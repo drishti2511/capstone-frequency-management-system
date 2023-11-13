@@ -16,6 +16,7 @@ import Typography from '@mui/material/Typography';
 import FormControl from '@mui/material/FormControl';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox'; // Import Checkbox
+import Pagination from '@mui/material/Pagination';
 import { useSession } from 'next-auth/react';
 
 
@@ -44,6 +45,8 @@ export default function FrequencyBands() {
     const [frequencyFrom, setFrequencyFrom] = useState(''); // Input field for frequency from
     const [frequencyTo, setFrequencyTo] = useState('');     // Input field for frequency to
     const [numberOfBandsRequired, setNumberOfBandsRequired] = useState(0);
+    const [currentPage, setCurrentPage] = useState(1);
+    const bandsPerPage = 10; // Change this value as needed
 
     useEffect(() => {
         async function fetchData() {
@@ -86,21 +89,21 @@ export default function FrequencyBands() {
         try {
             const availableBands = bands.filter((band) => {
                 const bandFrequency = parseFloat(band.frequency_channel);
-                return bandFrequency >= fromFrequency && bandFrequency <= toFrequency &&  band.frequency_type === selectedFrequencyType;
+                return bandFrequency >= fromFrequency && bandFrequency <= toFrequency && band.frequency_type === selectedFrequencyType;
             });
-    
+
             const filteredBands = availableBands.filter((band) => {
                 return !isRowSelected(band._id);
             });
-    
+
             const selectedBands = filteredBands.length < numberOfBandsRequired
-            ? filteredBands
-            : filteredBands.slice(0, numberOfBandsRequired);
-            
+                ? filteredBands
+                : filteredBands.slice(0, numberOfBandsRequired);
+
             for (const band of selectedBands) {
                 handleSelectRow(band._id);
             }
-        }catch (error) {
+        } catch (error) {
             console.error(error);
         }
     };
@@ -108,14 +111,19 @@ export default function FrequencyBands() {
     const handleSelectRow = async (bandId) => {
         if (session) {
             const currentUserId = session.user.email;
-            const location = 'temporary_location';
             const userId = currentUserId;
-            console.log('session value');
-            console.log(session);
+
             try {
                 console.log('user_id=', currentUserId);
                 console.log('band_id=', bandId);
                 console.log('posting request');
+
+                // Assuming you have an API endpoint to get the user location based on the session
+                const userLocationResponse = await fetch(`/api/userlocation?userId=${userId}`);
+                const userLocationData = await userLocationResponse.json();
+
+                const location = userLocationData.location || 'temporary_location';
+
                 await fetch(`/api/bandselection`, {
                     method: 'PUT',
                     headers: {
@@ -123,6 +131,7 @@ export default function FrequencyBands() {
                     },
                     body: JSON.stringify({ bandId, userId, location }),
                 });
+
                 selectedRows.push(bandId);
                 setSelectedRows([...selectedRows]);
 
@@ -133,13 +142,14 @@ export default function FrequencyBands() {
 
         try {
             const response = await axios.get('/api/bandselection');
-            console.log('resposne obtained about already used bands', response);
+            console.log('response obtained about already used bands', response);
             const bandIds = response.data.map((item) => item.bandId);
             setOverallSelectedBands(bandIds);
         } catch (error) {
             console.error(error);
         }
     };
+
 
     console.log('overall selected bands : ', overallSelectedBands);
 
@@ -149,6 +159,9 @@ export default function FrequencyBands() {
         );
     };
 
+    const handlePageChange = (event, page) => {
+        setCurrentPage(page);
+    };
 
 
     const handleFrequencyTypeChange = (event) => {
@@ -160,6 +173,10 @@ export default function FrequencyBands() {
     const filteredBands = selectedFrequencyType
         ? bands.filter((band) => band.frequency_type === selectedFrequencyType)
         : bands;
+
+    const indexOfLastBand = currentPage * bandsPerPage;
+    const indexOfFirstBand = indexOfLastBand - bandsPerPage;
+    const currentBands = filteredBands.slice(indexOfFirstBand, indexOfLastBand);
 
     return (
         <div>
@@ -216,7 +233,6 @@ export default function FrequencyBands() {
                 <Table>
                     <TableHead>
                         <TableRow>
-
                             <TableCell>Band</TableCell>
                             <TableCell>Frequency (Mhz)</TableCell>
                             <TableCell>User</TableCell>
@@ -225,7 +241,7 @@ export default function FrequencyBands() {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {filteredBands.map((band) => (
+                        {currentBands.map((band) => (
                             <TableRow
                                 key={band._id}
                                 style={
@@ -235,7 +251,7 @@ export default function FrequencyBands() {
                                 }
                             >
                                 <TableCell>{band.frequency_type}</TableCell>
-                                <TableCell>{band.frequency_channel}</TableCell>
+                                <TableCell>{parseFloat(band.frequency_channel).toFixed(3)}</TableCell>
                                 <TableCell>{band.user_email || '-'}</TableCell>
                                 <TableCell>{band.user_location || '-'}</TableCell>
                                 <TableCell>{band.power}</TableCell>
@@ -250,6 +266,15 @@ export default function FrequencyBands() {
                     </TableBody>
                 </Table>
             </TableContainer>
+            <Box display="flex" justifyContent="center" alignItems="center" mt={2}>
+                <Pagination
+                    count={Math.ceil(filteredBands.length / bandsPerPage)}
+                    page={currentPage}
+                    onChange={handlePageChange}
+                    variant="outlined"
+                    shape="rounded"
+                />
+            </Box>
         </div>
     );
 }
