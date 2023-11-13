@@ -107,39 +107,46 @@ export default function FrequencyBands() {
 
     const handleSelectRow = async (bandId) => {
         if (session) {
-            const currentUserId = session.user.email;
-            const location = 'temporary_location';
-            const userId = currentUserId;
-            console.log('session value');
-            console.log(session);
-            try {
-                console.log('user_id=', currentUserId);
-                console.log('band_id=', bandId);
-                console.log('posting request');
-                await fetch(`/api/bandselection`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ bandId, userId, location }),
-                });
-                selectedRows.push(bandId);
-                setSelectedRows([...selectedRows]);
-
-            } catch (error) {
-                console.error(error);
-            }
-        }
-
-        try {
-            const response = await axios.get('/api/bandselection');
-            console.log('resposne obtained about already used bands', response);
-            const bandIds = response.data.map((item) => item.bandId);
-            setOverallSelectedBands(bandIds);
-        } catch (error) {
+          const currentUserId = session.user.email;
+          const userId = currentUserId;
+          
+          try {
+            console.log('user_id=', currentUserId);
+            console.log('band_id=', bandId);
+            console.log('posting request');
+            
+            // Assuming you have an API endpoint to get the user location based on the session
+            const userLocationResponse = await fetch(`/api/userlocation?userId=${userId}`);
+            const userLocationData = await userLocationResponse.json();
+            
+            const location = userLocationData.location || 'temporary_location';
+      
+            await fetch(`/api/bandselection`, {
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ bandId, userId, location }),
+            });
+      
+            selectedRows.push(bandId);
+            setSelectedRows([...selectedRows]);
+      
+          } catch (error) {
             console.error(error);
+          }
         }
-    };
+      
+        try {
+          const response = await axios.get('/api/bandselection');
+          console.log('response obtained about already used bands', response);
+          const bandIds = response.data.map((item) => item.bandId);
+          setOverallSelectedBands(bandIds);
+        } catch (error) {
+          console.error(error);
+        }
+      };
+      
 
     console.log('overall selected bands : ', overallSelectedBands);
 
