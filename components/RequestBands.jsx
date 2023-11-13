@@ -86,21 +86,21 @@ export default function FrequencyBands() {
         try {
             const availableBands = bands.filter((band) => {
                 const bandFrequency = parseFloat(band.frequency_channel);
-                return bandFrequency >= fromFrequency && bandFrequency <= toFrequency &&  band.frequency_type === selectedFrequencyType;
+                return bandFrequency >= fromFrequency && bandFrequency <= toFrequency && band.frequency_type === selectedFrequencyType;
             });
-    
+
             const filteredBands = availableBands.filter((band) => {
                 return !isRowSelected(band._id);
             });
-    
+
             const selectedBands = filteredBands.length < numberOfBandsRequired
-            ? filteredBands
-            : filteredBands.slice(0, numberOfBandsRequired);
-            
+                ? filteredBands
+                : filteredBands.slice(0, numberOfBandsRequired);
+
             for (const band of selectedBands) {
                 handleSelectRow(band._id);
             }
-        }catch (error) {
+        } catch (error) {
             console.error(error);
         }
     };
@@ -216,7 +216,6 @@ export default function FrequencyBands() {
                 <Table>
                     <TableHead>
                         <TableRow>
-
                             <TableCell>Band</TableCell>
                             <TableCell>Frequency (Mhz)</TableCell>
                             <TableCell>User</TableCell>
@@ -235,7 +234,7 @@ export default function FrequencyBands() {
                                 }
                             >
                                 <TableCell>{band.frequency_type}</TableCell>
-                                <TableCell>{band.frequency_channel}</TableCell>
+                                <TableCell>{parseFloat(band.frequency_channel).toFixed(3)}</TableCell>
                                 <TableCell>{band.user_email || '-'}</TableCell>
                                 <TableCell>{band.user_location || '-'}</TableCell>
                                 <TableCell>{band.power}</TableCell>
