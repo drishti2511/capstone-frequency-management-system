@@ -119,12 +119,6 @@ export default function FrequencyBands() {
                 console.log('band_id=', bandId);
                 console.log('posting request');
 
-                // Assuming you have an API endpoint to get the user location based on the session
-                // const userLocationResponse = await fetch(`/api/userlocation?userId=${userId}`);
-                // const userLocationData = await userLocationResponse.json();
-
-                // const location = userLocationData.location || 'temporary_location';
-
                 const position = await new Promise((resolve, reject) => {
                     navigator.geolocation.getCurrentPosition(resolve, reject);
                   });
@@ -132,7 +126,7 @@ export default function FrequencyBands() {
                   console.log('latitude :',latitude);
                   console.log('longitude :',longitude);
                   setLocation({ latitude, longitude });
-                // console.log('location is :',position.coords );
+
                 await fetch(`/api/bandselection`, {
                     method: 'PUT',
                     headers: {
@@ -141,8 +135,11 @@ export default function FrequencyBands() {
                     body: JSON.stringify({ bandId, userId, latitude,longitude }),
                 });
 
-                selectedRows.push(bandId);
-                setSelectedRows([...selectedRows]);
+                setSelectedRows((prevSelectedRows) => {
+                    const newSelectedRows = [...prevSelectedRows];
+                    newSelectedRows.push(bandId);
+                    return newSelectedRows;
+                });
 
             } catch (error) {
                 console.error(error);
@@ -152,8 +149,21 @@ export default function FrequencyBands() {
         try {
             const response = await axios.get('/api/bandselection');
             console.log('response obtained about already used bands', response);
-            const bandIds = response.data.map((item) => item.bandId);
+            const bandIds = response.data;
+            console.log(bandIds);
             setOverallSelectedBands(bandIds);
+        } catch (error) {
+            console.error(error);
+        }
+
+        try {
+            const response = await axios.get('/api/reqfreq');
+            const bandsWithLabels = response.data.map((band) => ({
+                ...band,
+                frequency_type: frequencyTypeLabels[band.frequency_type],
+            }));
+
+            setBands(bandsWithLabels);
         } catch (error) {
             console.error(error);
         }
