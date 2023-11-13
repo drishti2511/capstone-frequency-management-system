@@ -14,7 +14,11 @@ const freqBandSchema = new mongoose.Schema(
             type: String,
             required: false,
         },
-        user_location :{
+        user_latitude :{
+            type: String,
+            required: false, 
+        },
+        user_longitude :{
             type: String,
             required: false, 
         },

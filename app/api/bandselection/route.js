@@ -16,14 +16,15 @@ import { NextResponse } from "next/server";
 export async function PUT(req) {
 
     try {
-        const { bandId, userId, location} = await req.json();
+        const {bandId, userId, latitude,longitude } = await req.json();
         const bandIdObjectId = new mongoose.Types.ObjectId(bandId);
         await connectMongoDB();
         const existingFreqBand = await freqBand.findOne({_id: bandIdObjectId });
         // console.log(userId,location);
+        console.log(latitude,longitude);
         existingFreqBand.user_email = userId;
-        existingFreqBand.user_location = location;
-        console.log('updated user location is : ',existingFreqBand.user_loaction );
+        existingFreqBand.user_latitude = latitude;
+        existingFreqBand.user_longitude = longitude;
         const updatedFreqBand = await existingFreqBand.save();
         return NextResponse.json(updatedFreqBand, { status: 200 });
 

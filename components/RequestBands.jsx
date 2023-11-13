@@ -46,6 +46,7 @@ export default function FrequencyBands() {
     const [frequencyTo, setFrequencyTo] = useState('');     // Input field for frequency to
     const [numberOfBandsRequired, setNumberOfBandsRequired] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
+    const [location, setLocation] = useState('');
     const bandsPerPage = 10; // Change this value as needed
 
     useEffect(() => {
@@ -119,17 +120,25 @@ export default function FrequencyBands() {
                 console.log('posting request');
 
                 // Assuming you have an API endpoint to get the user location based on the session
-                const userLocationResponse = await fetch(`/api/userlocation?userId=${userId}`);
-                const userLocationData = await userLocationResponse.json();
+                // const userLocationResponse = await fetch(`/api/userlocation?userId=${userId}`);
+                // const userLocationData = await userLocationResponse.json();
 
-                const location = userLocationData.location || 'temporary_location';
+                // const location = userLocationData.location || 'temporary_location';
 
+                const position = await new Promise((resolve, reject) => {
+                    navigator.geolocation.getCurrentPosition(resolve, reject);
+                  });
+                  const { latitude, longitude } = position.coords;
+                  console.log('latitude :',latitude);
+                  console.log('longitude :',longitude);
+                  setLocation({ latitude, longitude });
+                // console.log('location is :',position.coords );
                 await fetch(`/api/bandselection`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ bandId, userId, location }),
+                    body: JSON.stringify({ bandId, userId, latitude,longitude }),
                 });
 
                 selectedRows.push(bandId);
@@ -236,7 +245,8 @@ export default function FrequencyBands() {
                             <TableCell>Band</TableCell>
                             <TableCell>Frequency (Mhz)</TableCell>
                             <TableCell>User</TableCell>
-                            <TableCell>User Location</TableCell>
+                            <TableCell>Latitude</TableCell>
+                            <TableCell>Longitude</TableCell>
                             <TableCell>Power (W)</TableCell>
                         </TableRow>
                     </TableHead>
@@ -253,7 +263,8 @@ export default function FrequencyBands() {
                                 <TableCell>{band.frequency_type}</TableCell>
                                 <TableCell>{parseFloat(band.frequency_channel).toFixed(3)}</TableCell>
                                 <TableCell>{band.user_email || '-'}</TableCell>
-                                <TableCell>{band.user_location || '-'}</TableCell>
+                                <TableCell>{band.user_latitude || '-'}</TableCell>
+                                <TableCell>{band.user_longitude || '-'}</TableCell>
                                 <TableCell>{band.power}</TableCell>
                                 <TableCell>
                                     <Checkbox
