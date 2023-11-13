@@ -99,7 +99,9 @@ export default function AuthHome() {
                                 </CardContent>
                                 <CardActions>
                                     <Button onClick={() => router.push("reqfreq")} size="small">Request Bands</Button>
-                                </CardActions>
+                              
+                                    <Button onClick={() => router.push("createprofile")} size="small">Create Profile</Button>
+                                    </CardActions>
                             </Card>
                         </Grid>
 
