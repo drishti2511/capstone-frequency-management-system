@@ -132,7 +132,7 @@ export default function FrequencyBands() {
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ bandId, userId, latitude,longitude }),
+                    body: JSON.stringify({ bandId, userId, latitude, longitude }),
                 });
 
                 setSelectedRows((prevSelectedRows) => {
