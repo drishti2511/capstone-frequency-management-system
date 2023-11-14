@@ -4,6 +4,7 @@ import { Container, Grid, Typography, TextField, Button, Paper } from '@mui/mate
 const axios = require('axios');
 import { useSession } from 'next-auth/react';
 import { styled } from '@mui/system';
+import AvatarComponent from './AvatarComponent'; // Import the AvatarComponent
 
 // const TextField = withStyles(styles)(TextField);
 
@@ -70,14 +71,19 @@ const Profile = () => {
     return (
         <Container maxWidth="md">
             <Paper elevation={3} style={{ padding: 20, marginTop: 40 }}>
-            {userData && (
-                <Typography variant="h5" gutterBottom>
-                {userData.name}'s Profile
-                </Typography>
-                 )}
+                {userData && (
+                    <>
+                        {/* Use the AvatarComponent here */}
+                        <AvatarComponent name={userData.name} />
+
+                        <Typography variant="h5" gutterBottom>
+                            {userData.name}'s Profile
+                        </Typography>
+                    </>
+                )}
                 <Grid container spacing={2}>
                     <Grid item xs={4} style={{ display: 'flex', flexDirection: 'column' }}>
-                    <Typography
+                        <Typography
                             variant="body1"
                             sx={{
                                 backgroundColor: '#1e90ff',
