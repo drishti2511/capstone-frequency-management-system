@@ -9,7 +9,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
 import Paper from '@mui/material/Paper';
-
+import Navbar from './Navbar';
 
 
 const CreateProfile = () => {
@@ -110,6 +110,7 @@ const CreateProfile = () => {
 
   return (
     <Container component="main" maxWidth="xs" style={{ maxWidth: '600px' }}>
+       <Navbar />
       <Paper elevation={3} style={{ padding: 20, display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '40px', maxWidth: '1000px' }}>
         <Typography variant="h4" style={{ marginBottom: 20, color: '#333', fontWeight: 'bold' }}>
           Create Profile
