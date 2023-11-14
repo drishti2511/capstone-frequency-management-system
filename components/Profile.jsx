@@ -72,14 +72,14 @@ const Profile = () => {
         <Container maxWidth="md">
             <Paper elevation={3} style={{ padding: 20, marginTop: 40 }}>
                 {userData && (
-                    <>
+                    <div style={{ display: 'flex', alignItems: 'center', marginBottom: 20 }}>
                         {/* Use the AvatarComponent here */}
                         <AvatarComponent name={userData.name} />
 
-                        <Typography variant="h5" gutterBottom>
+                        <Typography variant="h5" style={{ marginLeft: 20 }} gutterBottom>
                             {userData.name}'s Profile
                         </Typography>
-                    </>
+                    </div>
                 )}
                 <Grid container spacing={2}>
                     <Grid item xs={4} style={{ display: 'flex', flexDirection: 'column' }}>
