@@ -70,9 +70,11 @@ const Profile = () => {
     return (
         <Container maxWidth="md">
             <Paper elevation={3} style={{ padding: 20, marginTop: 40 }}>
+            {userData && (
                 <Typography variant="h5" gutterBottom>
-                    User Profile
+                {userData.name}'s Profile
                 </Typography>
+                 )}
                 <Grid container spacing={2}>
                     <Grid item xs={4} style={{ display: 'flex', flexDirection: 'column' }}>
                     <Typography

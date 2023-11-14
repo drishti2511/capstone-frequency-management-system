@@ -91,7 +91,7 @@ export default function AuthHome() {
                                 />
                                 <CardContent sx={{ flexGrow: 1 }}>
                                     <Typography gutterBottom variant="h5" component="h2">
-                                        Request Frequency Bands
+                                        Request/Delete Frequency Bands
                                     </Typography>
                                     <Typography>
                                         Get the required number of bands in the desired frequency range.
@@ -99,8 +99,7 @@ export default function AuthHome() {
                                 </CardContent>
                                 <CardActions>
                                     <Button onClick={() => router.push("reqfreq")} size="small">Request Bands</Button>
-                              
-                                    <Button onClick={() => router.push("createprofile")} size="small">Create Profile</Button>
+                                    <Button onClick={() => router.push("deletebands")} size="small">Delete Bands</Button>
                                     </CardActions>
                             </Card>
                         </Grid>
@@ -119,15 +118,16 @@ export default function AuthHome() {
                                 />
                                 <CardContent sx={{ flexGrow: 1 }}>
                                     <Typography gutterBottom variant="h5" component="h2">
-                                        Add/Delete Frequency Bands
+                                        New User? Create User Profile
                                     </Typography>
                                     <Typography>
                                        Add or Delete frequencies as per user choice.
                                     </Typography>
                                 </CardContent>
                                 <CardActions>
-                                    <Button onClick={() => router.push("addfreq")} size="small">Add Bands</Button>
-                                    <Button onClick={() => router.push("deletebands")} size="small">Delete Bands</Button>
+                                    {/* <Button onClick={() => router.push("addfreq")} size="small">Add Bands</Button> */}
+                                   
+                                    <Button onClick={() => router.push("createprofile")} size="small">Create Profile</Button>
                                 </CardActions>
                             </Card>
                         </Grid>
