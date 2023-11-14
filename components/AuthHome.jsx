@@ -96,6 +96,9 @@ export default function AuthHome() {
                                     <Typography>
                                         Get the required number of bands in the desired frequency range.
                                     </Typography>
+                                    <Typography>
+                                        Free occupied bands.
+                                    </Typography>
                                 </CardContent>
                                 <CardActions>
                                     <Button onClick={() => router.push("reqfreq")} size="small">Request Bands</Button>
@@ -118,16 +121,18 @@ export default function AuthHome() {
                                 />
                                 <CardContent sx={{ flexGrow: 1 }}>
                                     <Typography gutterBottom variant="h5" component="h2">
-                                        New User? Create User Profile
+                                        Create/Find Profile
                                     </Typography>
                                     <Typography>
-                                       Add or Delete frequencies as per user choice.
+                                       New User? Create your Profile. 
+                                       </Typography>
+                                       <Typography>
+                                       Find a User.
                                     </Typography>
                                 </CardContent>
                                 <CardActions>
-                                    {/* <Button onClick={() => router.push("addfreq")} size="small">Add Bands</Button> */}
-                                   
                                     <Button onClick={() => router.push("createprofile")} size="small">Create Profile</Button>
+                                         <Button onClick={() => router.push("findprofile")} size="small">Find User</Button>
                                 </CardActions>
                             </Card>
                         </Grid>
