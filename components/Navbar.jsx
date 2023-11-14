@@ -74,7 +74,10 @@ const Navbar = () => {
 
   };
 
+  const handleLocationUpdate = () => {
+    router.push("locationupdate"); // Replace '/' with your home page URL
 
+  };
 
   const handleLogout = async () => {
     localStorage.removeItem('email');
@@ -96,10 +99,10 @@ const Navbar = () => {
           <AccountCircleIcon />
         </IconButton>
 
-{/* 
-        <IconButton color="inherit">
+
+        <IconButton color="inherit" onClick={handleLocationUpdate}>
           <LocationOnIcon />
-        </IconButton> */}
+        </IconButton>
 
         <IconButton color="inherit" onClick={handleGoToHomePage}>
           <HomeIcon />
