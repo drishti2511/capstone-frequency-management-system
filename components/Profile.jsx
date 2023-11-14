@@ -77,7 +77,7 @@ const Profile = () => {
                         <AvatarComponent name={userData.name} />
 
                         <Typography variant="h5" style={{ marginLeft: 20 }} gutterBottom>
-                            {userData.name}'s Profile
+                            {userData.name}&apos;s Profile
                         </Typography>
                     </div>
                 )}

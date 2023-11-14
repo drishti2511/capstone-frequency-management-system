@@ -119,7 +119,7 @@ const LoginForm = () => {
             }
             <div style={{ marginTop: '20px' }}>
               <Link href="/signup" style={{ marginTop: '4px', textDecoration: 'none', color: 'inherit' }}>
-                Don't have an account? <span style={{ borderBottom: '1px solid black', cursor: 'pointer', color: 'inherit' }}>Sign up here</span>.
+                Don&apos;t have an account? <span style={{ borderBottom: '1px solid black', cursor: 'pointer', color: 'inherit' }}>Sign up here</span>.
               </Link>
             </div>
           </form>

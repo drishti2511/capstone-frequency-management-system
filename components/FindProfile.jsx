@@ -87,7 +87,7 @@ const FindProfile = () => {
                 }}
             >
                 <p>
-                    Enter User's Email Id
+                    Enter User&apos;s Email Id
                 </p>
             </Box>
 
@@ -122,7 +122,7 @@ const FindProfile = () => {
             {userData && (<Paper elevation={3} style={{ padding: 20, marginTop: 40 }}>
                 {userData && (
                     <Typography variant="h5" gutterBottom>
-                        {userData.name}'s Profile
+                        {userData.name}&apos;s Profile
                     </Typography>
                 )}
                 <Grid container spacing={2}>
