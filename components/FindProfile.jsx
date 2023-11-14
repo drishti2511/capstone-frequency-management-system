@@ -11,8 +11,8 @@ import { styled } from '@mui/system';
 
 const FindProfile = () => {
     const [userData, setUserData] = useState(null);
-    const [latitude1, setLatitude1] = useState('');
-    const [longitude1, setLongitude1] = useState('');
+    const [latitude, setLatitude] = useState('');
+    const [longitude, setLongitude] = useState('');
     const [email, setEmail] = useState('');
 
 
@@ -25,16 +25,6 @@ const FindProfile = () => {
                 'Accept': 'application/json'
             }
         };
-
-        // const position = await new Promise((resolve, reject) => {
-        //     navigator.geolocation.getCurrentPosition(resolve, reject);
-        // });
-        // const { latitude, longitude } = position.coords;
-        // setLatitude1(latitude);
-        // setLongitude1(longitude);
-        // console.log('latitude :', latitude);
-        // console.log('longitude :', longitude);
-
 
         try {
             console.log('inside-loaduserprof-temp');
@@ -49,6 +39,27 @@ const FindProfile = () => {
                 setUserData(data.userData);
                 console.log(data.userData.designation);
 
+            } else {
+                console.error('Failed to fetch user data');
+            }
+
+        } catch (error) {
+            console.error('Error while fetching user data:', error);
+        }
+
+        try {
+            console.log('inside-loaduserprof-temp');
+            console.log(email);
+            const response = await axios.get(`/api/userlocation?email=${email}`);
+   
+            console.log('response fetched :',response);
+            if (response.status === 200) {
+                const data = response.data;
+                console.log('data fetched');
+                console.log(data);
+                setLatitude(data.userData.latitude);
+                setLongitude(data.userData.longitude);
+           
             } else {
                 console.error('Failed to fetch user data');
             }
@@ -185,7 +196,7 @@ const FindProfile = () => {
                             Radio Set Details
                         </Typography>
 
-                        {/* <Typography
+                        <Typography
                             variant="body1"
                             sx={{
                                 backgroundColor: '#1e90ff',
@@ -213,7 +224,7 @@ const FindProfile = () => {
                             }}
                         >
                             Longitude
-                        </Typography> */}
+                        </Typography>
 
                     </Grid>
                     <Grid item xs={6}>
@@ -267,12 +278,12 @@ const FindProfile = () => {
                                     value={userData.radioSetDetails}
                                 // disabled
                                 />
-                                {/* <TextField
+                                <TextField
                                     // label="Location"
                                     variant="outlined"
                                     fullWidth
                                     margin="normal"
-                                    value={latitude1}
+                                    value={latitude}
                                     style={{ color: 'red' }}
                                 // disabled
                                 />
@@ -281,10 +292,10 @@ const FindProfile = () => {
                                     variant="outlined"
                                     fullWidth
                                     margin="normal"
-                                    value={longitude1}
+                                    value={longitude}
                                     style={{ color: 'red' }}
                                 // disabled
-                                /> */}
+                                />
                             </div>
                         )}
                     </Grid>
