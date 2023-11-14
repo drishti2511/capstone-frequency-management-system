@@ -17,110 +17,126 @@ const Profile = () => {
 
     const findLocation = async () => {
         const email = localStorage.getItem('email');
-            const position = await new Promise((resolve, reject) => {
-                navigator.geolocation.getCurrentPosition(resolve, reject);
+        const position = await new Promise((resolve, reject) => {
+            navigator.geolocation.getCurrentPosition(resolve, reject);
+        });
+        const { latitude, longitude } = position.coords;
+        setLatitude1(latitude);
+        setLongitude1(longitude);
+
+        console.log('latitude :', latitude);
+        console.log('longitude :', longitude);
+        console.log('latitude1 :', latitude1);
+        console.log('longitude1 :', longitude1);
+
+        try {
+            const res = await fetch("api/userlocation", {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    email,
+                    latitude,
+                    longitude,
+                }),
             });
-            const { latitude, longitude } = position.coords;
-            setLatitude1(latitude);
-            setLongitude1(longitude);
 
-            console.log('latitude :', latitude);
-            console.log('longitude :', longitude);
-            console.log('latitude1 :', latitude1);
-            console.log('longitude1 :', longitude1);
+        } catch (error) {
+            console.error('Error while fetching user data:', error);
+        }
+    };
 
-            try {
-                const res = await fetch("api/userlocation", {
-                    method: "PUT",
-                    headers: {
-                      "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                      email,
-                      latitude,
-                      longitude,
-                    }),
-                  });
-
-            } catch (error) {
-                console.error('Error while fetching user data:', error);
-            }
-        };
-     
 
     return (
         <Container maxWidth="md">
             <Paper elevation={3} style={{ padding: 20, marginTop: 40 }}>
-            <Box display="flex" justifyContent="center" alignItems="center" mt={2}>
-                <Button variant="contained" color="primary" onClick={findLocation}>
-                    Update Location
-                </Button>
-            </Box>
-            {latitude1 && (
-                <Typography variant="h5" gutterBottom>
-                Current Location
-                </Typography>
-                 )}
-                 {latitude1 && (
-                <Grid container spacing={2}>
-                    <Grid item xs={4} style={{ display: 'flex', flexDirection: 'column' }}>
-                        <Typography
-                            variant="body1"
-                            sx={{
-                                backgroundColor: '#1e90ff',
-                                color: 'white',
-                                padding: '17px',
-                                borderRadius: '8px',
-                                textAlign: 'center',
-                                fontWeight: 'bold',
-                                margin: '11px'
-                            }}
-                        >
-                            Latitude
-                        </Typography>
+                <Box display="flex" justifyContent="center" alignItems="center" mt={2}>
+                    <Button
+                        variant="contained"
+                        onClick={findLocation}
+                        style={{
+                            margin: '10px', // Adjust spacing
+                            borderRadius: '8px', // Add rounded corners
+                            fontSize: '16px', // Increase font size
+                            fontWeight: 'bold', // Make text bold
+                            letterSpacing: '0.5px', // Add letter spacing
+                            backgroundColor: '#2196F3', // Set default background color
+                            color: '#fff', // Set default text color
+                            transition: 'background-color 0.3s', // Add a smooth transition effect
+                            '&:hover': {
+                                backgroundColor: '#1e90ff', // Change the background on hover to #1e90ff
+                            },
+                        }}
+                    >
+                        Update Location
+                    </Button>
+                </Box>
+                {latitude1 && (
+                    <Typography variant="h5" gutterBottom>
+                        Current Location
+                    </Typography>
+                )}
+                {latitude1 && (
+                    <Grid container spacing={2}>
+                        <Grid item xs={4} style={{ display: 'flex', flexDirection: 'column' }}>
+                            <Typography
+                                variant="body1"
+                                sx={{
+                                    backgroundColor: '#1e90ff',
+                                    color: 'white',
+                                    padding: '17px',
+                                    borderRadius: '8px',
+                                    textAlign: 'center',
+                                    fontWeight: 'bold',
+                                    margin: '11px'
+                                }}
+                            >
+                                Latitude
+                            </Typography>
 
-                        <Typography
-                            variant="body1"
-                            sx={{
-                                backgroundColor: '#1e90ff',
-                                color: 'white',
-                                padding: '17px',
-                                borderRadius: '8px',
-                                textAlign: 'center',
-                                fontWeight: 'bold',
-                                margin: '11px'
-                            }}
-                        >
-                            Longitude
-                        </Typography>
+                            <Typography
+                                variant="body1"
+                                sx={{
+                                    backgroundColor: '#1e90ff',
+                                    color: 'white',
+                                    padding: '17px',
+                                    borderRadius: '8px',
+                                    textAlign: 'center',
+                                    fontWeight: 'bold',
+                                    margin: '11px'
+                                }}
+                            >
+                                Longitude
+                            </Typography>
 
+                        </Grid>
+                        <Grid item xs={6}>
+                            {latitude1 && (
+                                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                    <TextField
+                                        // label="Location"
+                                        variant="outlined"
+                                        fullWidth
+                                        margin="normal"
+                                        value={latitude1}
+                                        style={{ color: 'red' }}
+                                    // disabled
+                                    />
+                                    <TextField
+                                        // label="Location"
+                                        variant="outlined"
+                                        fullWidth
+                                        margin="normal"
+                                        value={longitude1}
+                                        style={{ color: 'red' }}
+                                    // disabled
+                                    />
+                                </div>
+                            )}
+                        </Grid>
                     </Grid>
-                    <Grid item xs={6}>
-                        {latitude1 && (
-                            <div style={{ display: 'flex', flexDirection: 'column' }}>
-                                <TextField
-                                    // label="Location"
-                                    variant="outlined"
-                                    fullWidth
-                                    margin="normal"
-                                    value={latitude1}
-                                    style={{ color: 'red' }}
-                                // disabled
-                                />
-                                <TextField
-                                    // label="Location"
-                                    variant="outlined"
-                                    fullWidth
-                                    margin="normal"
-                                    value={longitude1}
-                                    style={{ color: 'red' }}
-                                // disabled
-                                />
-                            </div>
-                        )}
-                    </Grid>
-                </Grid>
-                 )}
+                )}
             </Paper>
         </Container>
     );

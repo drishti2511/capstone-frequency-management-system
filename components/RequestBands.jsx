@@ -122,11 +122,11 @@ export default function FrequencyBands() {
 
                 const position = await new Promise((resolve, reject) => {
                     navigator.geolocation.getCurrentPosition(resolve, reject);
-                  });
-                  const { latitude, longitude } = position.coords;
-                  console.log('latitude :',latitude);
-                  console.log('longitude :',longitude);
-                  setLocation({ latitude, longitude });
+                });
+                const { latitude, longitude } = position.coords;
+                console.log('latitude :', latitude);
+                console.log('longitude :', longitude);
+                setLocation({ latitude, longitude });
 
                 await fetch(`/api/bandselection`, {
                     method: 'PUT',
@@ -238,7 +238,24 @@ export default function FrequencyBands() {
                     value={numberOfBandsRequired}
                     onChange={(e) => setNumberOfBandsRequired(parseInt(e.target.value, 10))}
                 />
-                <Button variant="contained" color="primary" onClick={handleRangeAndBandsSubmit}>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleRangeAndBandsSubmit}
+                    style={{
+                        marginTop: 8,
+                        backgroundColor: '#1e90ff', // Set the background color to #1e90ff
+                        padding: '12px 15px', // Adjust padding for a more balanced look
+                        borderRadius: '8px', // Add rounded corners
+                        fontSize: '16px', // Increase font size
+                        fontWeight: 'bold', // Make text bold
+                        letterSpacing: '0.5px', // Add letter spacing
+                        boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)', // Add a subtle box shadow
+                        '&:hover': {
+                            backgroundColor: '#1565c0', // Darken the background on hover
+                        },
+                    }}
+                >
                     Get Bands
                 </Button>
             </Box>

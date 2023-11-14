@@ -146,7 +146,7 @@ export default function AuthHome() {
                     Thank You!
                 </Typography>
 
-                <Copyright />
+                {/* <Copyright /> */}
             </Box>
             {/* End footer */}
         </ThemeProvider>

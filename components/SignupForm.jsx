@@ -87,7 +87,7 @@ const SignupForm = () => {
     if (result?.error) {
       console.error('Google sign-in error:', result.error);
     }
-    else{
+    else {
       if (session) {
         router.push('authhome');
       } else {
@@ -136,7 +136,19 @@ const SignupForm = () => {
           {
             error && (<div style={{ color: 'red' }}>{error}</div>)
           }
-          <Button type="submit" variant="contained" color="primary" fullWidth style={{ marginTop: 20 }}>
+          <Button type="submit" variant="contained" color="primary" fullWidth style={{
+            margin: '10px', // Adjust spacing
+            borderRadius: '8px', // Add rounded corners
+            fontSize: '16px', // Increase font size
+            fontWeight: 'bold', // Make text bold
+            letterSpacing: '0.5px', // Add letter spacing
+            backgroundColor: '#2196F3', // Set default background color
+            color: '#fff', // Set default text color
+            transition: 'background-color 0.3s', // Add a smooth transition effect
+            '&:hover': {
+              backgroundColor: '#1e90ff', // Change the background on hover to #1e90ff
+            },
+          }}>
             Sign Up
           </Button>
         </form>
@@ -147,7 +159,19 @@ const SignupForm = () => {
         variant="contained"
         color="primary"
         fullWidth
-        style={{ marginTop: 20 }}
+        style={{
+          margin: '10px', // Adjust spacing
+          borderRadius: '8px', // Add rounded corners
+          fontSize: '16px', // Increase font size
+          fontWeight: 'bold', // Make text bold
+          letterSpacing: '0.5px', // Add letter spacing
+          backgroundColor: '#2196F3', // Set default background color
+          color: '#fff', // Set default text color
+          transition: 'background-color 0.3s', // Add a smooth transition effect
+          '&:hover': {
+            backgroundColor: '#1e90ff', // Change the background on hover to #1e90ff
+          },
+        }}
       >
         Sign Up with Google
       </Button>
