@@ -15,7 +15,7 @@ const Profile = () => {
     const [longitude1, setLongitude1] = useState('');
     const { data: session } = useSession();
 
-    const findLocation = async (e) => {
+    const findLocation = async () => {
         const email = localStorage.getItem('email');
             const position = await new Promise((resolve, reject) => {
                 navigator.geolocation.getCurrentPosition(resolve, reject);
@@ -23,6 +23,7 @@ const Profile = () => {
             const { latitude, longitude } = position.coords;
             setLatitude1(latitude);
             setLongitude1(longitude);
+
             console.log('latitude :', latitude);
             console.log('longitude :', longitude);
             console.log('latitude1 :', latitude1);
@@ -45,7 +46,7 @@ const Profile = () => {
                 console.error('Error while fetching user data:', error);
             }
         };
-
+     
 
     return (
         <Container maxWidth="md">
@@ -95,7 +96,7 @@ const Profile = () => {
 
                     </Grid>
                     <Grid item xs={6}>
-                        {userData && (
+                        {latitude1 && (
                             <div style={{ display: 'flex', flexDirection: 'column' }}>
                                 <TextField
                                     // label="Location"
