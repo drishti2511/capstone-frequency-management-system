@@ -64,10 +64,17 @@ export default function HomePage() {
                             component="h1"
                             variant="h3"
                             align="center"
-                            color="text.primary"
+                            color="#333" // Assuming you have a primary color defined in your theme
                             gutterBottom
+                            style={{
+                                marginTop: 20,
+                                marginBottom: 20,
+                                fontWeight: 'bold',
+                                fontFamily: 'Arial, sans-serif',
+                                textShadow: '1px 1px 2px rgba(0, 0, 0, 0.2)', // Add a subtle text shadow
+                            }}
                         >
-                            Automated Spectrum Management and Freqeuncy Allocation System
+                            Automated Spectrum Management and Frequency Allocation System
                         </Typography>
                         <Stack
                             sx={{ pt: 4 }}
@@ -77,14 +84,40 @@ export default function HomePage() {
                         >
                             <Button
                                 variant="contained"
-                                onClick={() => router.push("login")} // Navigate to LoginForm
+                                onClick={() => router.push('login')}
+                                style={{
+                                    margin: '10px', // Adjust spacing
+                                    borderRadius: '8px', // Add rounded corners
+                                    fontSize: '16px', // Increase font size
+                                    fontWeight: 'bold', // Make text bold
+                                    letterSpacing: '0.5px', // Add letter spacing
+                                    backgroundColor: '#2196F3', // Set default background color
+                                    color: '#fff', // Set default text color
+                                    transition: 'background-color 0.3s', // Add a smooth transition effect
+                                    '&:hover': {
+                                        backgroundColor: '#1e90ff', // Change the background on hover to #1e90ff
+                                    },
+                                }}
                             >
                                 Login
                             </Button>
 
                             <Button
                                 variant="outlined"
-                                onClick={() => router.push("signup")} // Navigate to LoginForm
+                                onClick={() => router.push('signup')}
+                                style={{
+                                    margin: '10px', // Adjust spacing
+                                    borderRadius: '8px', // Add rounded corners
+                                    fontSize: '16px', // Increase font size
+                                    fontWeight: 'bold', // Make text bold
+                                    letterSpacing: '0.5px', // Add letter spacing
+                                    backgroundColor: '#2196F3', // Set default background color
+                                    color: '#fff', // Set default text color
+                                    transition: 'background-color 0.3s', // Add a smooth transition effect
+                                    '&:hover': {
+                                        backgroundColor: '#1e90ff', // Change the background on hover to #1e90ff
+                                    },
+                                }}
                             >
                                 Signup
                             </Button>
@@ -160,7 +193,7 @@ export default function HomePage() {
                     Thank You!
                 </Typography>
 
-                <Copyright />
+                {/* <Copyright /> */}
             </Box>
             {/* End footer */}
         </ThemeProvider>

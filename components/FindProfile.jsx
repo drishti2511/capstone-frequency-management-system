@@ -51,15 +51,15 @@ const FindProfile = () => {
             console.log('inside-loaduserprof-temp');
             console.log(email);
             const response = await axios.get(`/api/userlocation?email=${email}`);
-   
-            console.log('response fetched :',response);
+
+            console.log('response fetched :', response);
             if (response.status === 200) {
                 const data = response.data;
                 console.log('data fetched');
                 console.log(data);
                 setLatitude(data.userData.latitude);
                 setLongitude(data.userData.longitude);
-           
+
             } else {
                 console.error('Failed to fetch user data');
             }
@@ -74,13 +74,19 @@ const FindProfile = () => {
 
     return (
         <Container maxWidth="md">
-            <Box display="flex" justifyContent="center" alignItems="center" mt={2}>
-                <p style={{
+            <Box
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                mt={2}
+                style={{
                     textAlign: 'center',
                     fontSize: '20px',
                     marginTop: '20px',
-                    marginBottom: '2px'
-                }}>
+                    marginBottom: '2px',
+                }}
+            >
+                <p>
                     Enter User's Email Id
                 </p>
             </Box>
@@ -94,7 +100,22 @@ const FindProfile = () => {
             </Box>
 
             <Box display="flex" justifyContent="center" alignItems="center" mt={2}>
-                <Button variant="contained" color="primary" onClick={findProfile}>
+                <Button variant="contained"
+                    style={{
+                        margin: '10px', // Adjust spacing
+                        borderRadius: '8px', // Add rounded corners
+                        fontSize: '16px', // Increase font size
+                        fontWeight: 'bold', // Make text bold
+                        letterSpacing: '0.5px', // Add letter spacing
+                        backgroundColor: '#2196F3', // Set default background color
+                        color: '#fff', // Set default text color
+                        transition: 'background-color 0.3s', // Add a smooth transition effect
+                        '&:hover': {
+                            backgroundColor: '#1e90ff', // Change the background on hover to #1e90ff
+                        },
+                    }}
+                    onClick={findProfile}
+                >
                     Get Profile
                 </Button>
             </Box>
@@ -301,7 +322,7 @@ const FindProfile = () => {
                     </Grid>
                 </Grid>
             </Paper>
-             )}
+            )}
         </Container>
     );
 };

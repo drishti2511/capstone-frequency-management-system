@@ -22,6 +22,8 @@ const CreateProfile = () => {
   const [location, setLocation] = useState('');
   const [profilePicture, setProfilePicture] = useState(null);
   const [error, setError] = useState('');
+  const [selectedProfilePicture, setSelectedProfilePicture] = useState(null);
+
 
   const handleProfilePictureChange = (event) => {
     const file = event.target.files[0];
@@ -35,12 +37,22 @@ const CreateProfile = () => {
 
         // Update the state with the new profile picture data URL
         setProfilePicture(imageDataUrl);
+        setSelectedProfilePicture(file); // Save the selected file
       };
 
       // Read the file as a data URL
       reader.readAsDataURL(file);
     }
   };
+
+  <TextField
+    label="Profile Picture"
+    variant="outlined"
+    fullWidth
+    margin="normal"
+    type="file"
+    onChange={handleProfilePictureChange}
+  />
 
 
   const handleSubmit = async (event) => {
@@ -99,7 +111,9 @@ const CreateProfile = () => {
   return (
     <Container component="main" maxWidth="xs" style={{ maxWidth: '600px' }}>
       <Paper elevation={3} style={{ padding: 20, display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '40px', maxWidth: '1000px' }}>
-        <Typography variant="h5">Create Profile</Typography>
+        <Typography variant="h4" style={{ marginBottom: 20, color: '#333', fontWeight: 'bold' }}>
+          Create Profile
+        </Typography>
         <form onSubmit={handleSubmit} style={{ width: '100%', marginTop: 20 }}>
           <TextField
             label="Email"
@@ -183,9 +197,25 @@ const CreateProfile = () => {
           {/* {
          error && (<div style={{ color: 'red' }}>{error}</div>)
         } */}
-          <Button type="submit" variant="contained" color="primary" fullWidth style={{ marginTop: 20 }}>
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            fullWidth
+            style={{
+              marginTop: 20,
+              backgroundColor: '#4169e1',
+              transition: 'background-color 0.3s, box-shadow 0.3s', // Add smooth transitions
+              boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)', // Add a subtle box shadow
+              '&:hover': {
+                backgroundColor: '#1e90ff', // Change the background color on hover
+                boxShadow: '0px 6px 8px rgba(0, 0, 0, 0.2)', // Enhance the box shadow on hover
+              },
+            }}
+          >
             Submit
           </Button>
+
         </form>
       </Paper>
     </Container>
